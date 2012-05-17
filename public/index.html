@@ -1,3 +1,109 @@
-<html>
-<body>Hello</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Broadcast - The Outpost</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is a demo of the basic Broadcast Chat Application used by The Outpost and The Smallest Federated Wiki.">
+    <meta name="author" content="Nicholas Hallahan">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="page-header">
+        <h1><a href="http://theoutpost.io/">The Outpost</a> Broadcast <small>Real-Time NodeJS Chat Application</small></h1>
+      </div>
+      <div class="row">
+        <div class="span3 columns">
+          <h3>About</h3>
+          <p>This web application uses <a href="http://socket.io/">socket.io</a> to create full-duplex communication between 
+          	the client and the server. All data is stored as .json files on the server and is loaded into memory by NodeJS. 
+          	This demo is a stand-alone Broadcast, but it is designed to be used on 
+          	<a href="http://theoutpost.io/">The Outpost</a> as a 
+          	<a href="https://github.com/WardCunningham/Smallest-Federated-Wiki">Smallest Federated Wiki</a> plug-in. 
+          </p>
+       </div>
+        <div class="span6 columns">
+          <h2>Demo Stack</h2>
+          <p>
+          	You can put a stack on any <a href="https://github.com/WardCunningham/Smallest-Federated-Wiki">Smallest Federated Wiki</a> page, and all of the content broadcast on each individual stack is independent from the others. The users are managed by the wiki farm.
+          </p>
+
+          <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                  Collapsible Group Item #1
+                </a>
+              </div>
+              <div id="collapseOne" class="accordion-body collapse in">
+                <div class="accordion-inner">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                  Collapsible Group Item #2
+                </a>
+              </div>
+              <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                  Collapsible Group Item #3
+                </a>
+              </div>
+              <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+
+        <div class="span3 columns">
+          <h3>Source</h3>
+          <p>
+          	This project is available on <a href="https://github.com/hallahan/Smallest-Federated-Wiki">github</a>. 
+          	You may also download the code here:
+      	  </p>
+
+          <a href="assets/js/bootstrap-collapse.js" target="_blank" class="btn">Download code.</a>
+       </div> 
+
+      </div>
+
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="jquery-1.7.2.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+
+  </body>
 </html>

@@ -1,2 +1,2 @@
 require('coffee-script');
-require('./main');
+require('./app');
