@@ -1,16 +1,13 @@
 #! /bin/bash
 
-echo "Compiling client coffeescript to javascript..."
-coffee -c -o public/ src/util.coffee
-coffee -c -o public/ src/view.coffee
-coffee -c -o public/ src/controller.coffee
-
-echo "Compiling server coffeescript to javascript..."
-coffee -c -o lib/ src/model.coffee
-coffee -c -o lib/ src/app.coffee
-
 echo "Installing dependencies with Node Package Manager..."
 npm install 
+
+echo "Compiling client coffeescript to javascript..."
+./node_modules/.bin/browserify src/client.coffee -o public/client.js
+
+echo "Compiling server coffeescript to javascript..."
+./node_modules/coffee-script/bin/coffee -c -o lib/ src/*.coffee
 
 echo "Starting server."
 node lib/app.js

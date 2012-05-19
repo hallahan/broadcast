@@ -1,4 +1,7 @@
-# UTILITY FUNCTIONS
+# The Outpost Broadcast for The Smallest Federated Wiki
+# by Nicholas Hallahan
+# http://broadcast.theoutpost.io
+
 
 if !util
   util = {}
