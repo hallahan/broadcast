@@ -2,14 +2,10 @@
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
+# These are utility functions used both by
+# the server and the client.
 
-if !util
-  util = {}
-  exports.now       = now
-  exports.todayStr  = todayStr
-  exports.dateStr   = dateStr
-  exports.timeStr   = timeStr
-
+util = {}
 
 # RETURNS seconds since epoch
 util.now = ->
@@ -17,21 +13,11 @@ util.now = ->
 
 
 util.todayStr = ->
-  d = new Date() # now
-  wk = d.getDay().toString().slice(0,3)
-  mo = d.getMonth().toString().slice(0,3)
-  dy = d.getDate()
-  yr = d.getFullYear()
-  "#{wk} #{mo} #{dy} #{yr}"
+  new Date().toDateString()
 
 
 util.dateStr = (time) ->
-  d = new Date(time)
-  wk = d.getDay().toString().slice(0,3)
-  mo = d.getMonth().toString().slice(0,3)
-  dy = d.getDate()
-  yr = d.getFullYear()
-  "#{wk} #{mo} #{dy} #{yr}"
+  new Date(time).toDateString()
 
 
 util.timeStr = (time) ->
@@ -46,3 +32,9 @@ util.timeStr = (time) ->
   m = '0' + m if m < 10
   s = '0' + s if s < 10
   "#{h}:#{m}:#{s} #{mer}"
+
+
+if module?.exports?
+  module.exports = util
+else
+  return util

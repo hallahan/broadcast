@@ -9,7 +9,7 @@
 
 # Constants
 PORT = 3002
-
+PUBLIC = __dirname + '/../public'
 
 # Requirements
 express = require 'express'
@@ -26,7 +26,7 @@ app.configure ->
   # We want a cookie to be valid forever.
   app.use express.session({ secret: 'Zimbabwe', cookie: { maxAge: Infinity }})
   app.use app.router
-  app.use express.static(__dirname + '/public')
+  app.use express.static(PUBLIC)
 
 app.configure 'development', ->
   app.use express.errorHandler({ dumpExceptions: true, showStack: true })
@@ -58,8 +58,6 @@ io.sockets.on 'connection', (socket) ->
     socket.broadcast.emit 'log', model.log broadcast 
 
 
-
-
 # Checks if the requester has a valid session.
 auth = (req, res, next) ->
   if req.session?.auth
@@ -70,7 +68,7 @@ auth = (req, res, next) ->
 
 # Routes
 app.get '/', (req, res) ->
-  res.sendfile('/index.html')
+  res.sendfile(PUBLIC+'/index.html')
 
 
 app.post '/login', (req, res) ->

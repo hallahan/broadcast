@@ -2,8 +2,9 @@
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
+view = {}
 
-# view is a global variable declared in the html
+
 view.online = (onlineUsers) -> 
   str =     """
     <div class="accordion-heading">
@@ -51,3 +52,6 @@ view.broadcasts = (log) ->
         </div>
       {{/loggedBroadcasts}}
     </div> """
+
+
+return view
