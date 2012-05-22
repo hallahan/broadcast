@@ -5,7 +5,8 @@
 # This is the code for the controller which resides
 # client side.
 
-controller = {}
+view = broadcast.view
 
 
-return controller
+view.online(broadcast.test.users)
+view.broadcasts(broadcast.test.log, broadcast.test.users)

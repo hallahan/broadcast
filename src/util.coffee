@@ -3,24 +3,23 @@
 # http://broadcast.theoutpost.io
 
 # These are utility functions used both by
-# the server and the client.
-
-util = {}
+# the server and the client. The util object
+# is declared in index.html.
 
 # RETURNS seconds since epoch
-util.now = ->
+now = ->
   new Date().getTime()
 
 
-util.todayStr = ->
+todayStr = ->
   new Date().toDateString()
 
 
-util.dateStr = (time) ->
+dateStr = (time) ->
   new Date(time).toDateString()
 
 
-util.timeStr = (time) ->
+timeStr = (time) ->
   d = new Date(time)
   h = d.getHours()
   m = d.getMinutes()
@@ -34,7 +33,22 @@ util.timeStr = (time) ->
   "#{h}:#{m}:#{s} #{mer}"
 
 
+isToday = (time) ->
+  today = new Date().toDateString()
+  predicate = new Date(time).toDateString()
+  today == predicate
+
+
+isSameDate = (time1, time2) ->
+  date1 = new Date(time1).toDateString()
+  date2 = new Date(time2).toDateString()
+  date1 == date2
+
+
+emptyStr = ''
+
+
 if module?.exports?
-  module.exports = util
+  module.exports = {now, todayStr, dateStr, timeStr, isToday, isSameDate, emptyStr}
 else
-  return util
+  broadcast.util = {now, todayStr, dateStr, timeStr, isToday, isSameDate, emptyStr}
