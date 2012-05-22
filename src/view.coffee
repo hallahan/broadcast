@@ -29,7 +29,7 @@ broadcasts = (log, users) ->
   str =      """<div class="accordion-group">
                   <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#broadcasts" href="#broadcast-today">
-                      #{util.todayStr()}
+                      <strong>#{util.todayStr()}</strong>
                     </a>
                   </div>
                   <div id="broadcast-today" class="accordion-body collapse in">
@@ -61,10 +61,10 @@ broadcastsPast = (log, l, users) ->
   str +=     """<div class="accordion-group">
                   <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#broadcasts" href="##{l.time}">
-                      #{util.dateStr l.time}
+                      <strong>#{util.dateStr l.time}</strong>
                     </a>
                   </div>
-                  <div id="#{l.time}" class="accordion-body collapse in">
+                  <div id="#{l.time}" class="accordion-body collapse">
                     <div class="accordion-inner">
                       <strong>#{users[l.uid].name||users[l.uid].email}</strong>
                       <span class="broadcast-time">#{util.timeStr(l.time)}</span>
