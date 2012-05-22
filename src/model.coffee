@@ -9,10 +9,11 @@
 
 
 # Constants
-LAST_LOG_PATH   = "#{__dirname}/data/last-log.json" # determines which saved log is loaded.
+LAST_LOG_PATH   = "#{__dirname}/../data/last-log.json" # determines which saved log is loaded.
 
 # Requirements
 util  = require('./util')
+# test  = require('../test/test-model')
 fs    = require('fs') #file system
 
 
@@ -52,6 +53,9 @@ class User
 start = (sio) ->
   io = sio
   load()
+  
+  # loadTestData(test)
+
   setInterval checkActivity, 10000    # 10 secs
   setInterval considerSaving, 600000  # 10 mins
 
@@ -62,8 +66,12 @@ load = ->
   loadTimes.push util.now()
   try
     lastLog = JSON.parse fs.readFileSync LAST_LOG_PATH, "utf8"
-    logPath = "#{__dirname}/data/#{lastLog}.json"
-    [log, users, loadTimes, saveTimes] = JSON.parse fs.readFileSync logPath, "utf8"
+    logPath = "#{__dirname}/../data/#{lastLog}.json"
+    savedData = JSON.parse fs.readFileSync logPath, "utf8"
+    log = savedData.log
+    users = savedData.users
+    loadTimes = savedData.loadTimes
+    saveTimes = savedData.saveTimes
   catch e
     console.log "saved data not loaded"
 
@@ -71,9 +79,10 @@ load = ->
 # Saves to disk the current state in memory. The name is the total number
 # of logs previously saved + 1.
 # RETURNS data as a string
-save = -> 
-  data = JSON.stringify { log, users, loadTimes, saveTimes: saveTimes.push util.now() }
-  fs.writeFile "#{__dirname}/data/#{saveTimes.length}.json", data, (err) ->
+save = ->
+  saveTimes.push util.now()
+  data = JSON.stringify { log, users, loadTimes, saveTimes }, null, 2
+  fs.writeFile "#{__dirname}/../data/#{saveTimes.length}.json", data, (err) ->
     console.log 'unable to save memory to disk: '+err if err
   fs.writeFile LAST_LOG_PATH, JSON.stringify(saveTimes.length), (err) ->
     console.log 'unable to save last log number to disk: '+err if err
@@ -112,8 +121,18 @@ checkActivity = ->
 # Adds a broadcast to the log.
 logBroadcast = (broadcast) ->
   broadcast.lid = log.length
+  broadcast.user = users[broadcast.lid]
   log.push broadcast
   broadcast
+
+
+responseData = ->
+  JSON.stringify {activeUsers, log}, null, 2
+
+
+loadTestData = (testData) ->
+  users = testData.users
+  log = testData.log
 
 
 # Exports
@@ -123,3 +142,4 @@ exports.save          = save
 exports.login         = login
 exports.checkActivity = checkActivity
 exports.logBroadcast  = logBroadcast
+exports.responseData  = responseData

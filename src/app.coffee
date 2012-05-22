@@ -68,7 +68,11 @@ auth = (req, res, next) ->
 
 # Routes
 app.get '/', (req, res) ->
-  res.sendfile(PUBLIC+'/index.html')
+  res.sendfile('/index.html')
+
+
+app.get '/data', (req, res) ->
+  res.end model.responseData()
 
 
 app.post '/login', (req, res) ->

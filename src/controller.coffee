@@ -8,5 +8,10 @@
 view = broadcast.view
 
 
-view.online(broadcast.test.users)
-view.broadcasts(broadcast.test.log, broadcast.test.users)
+#Get initial data from server.
+$.getJSON '/data', (data) ->
+
+  # Populate views with data
+  view.online(broadcast.test.users)
+  view.broadcasts(broadcast.test.log, broadcast.test.users)
+
