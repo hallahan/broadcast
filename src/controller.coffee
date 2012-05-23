@@ -12,8 +12,8 @@ broadcast.socket = socket = io.connect()
 $.getJSON '/data', (data) ->
 
   # Populate views with data
-  view.online(broadcast.test.users)
-  view.broadcasts(broadcast.test.log, broadcast.test.users)
+  view.online(data.users)
+  view.broadcasts(data.log, data.users)
 
 socket.emit 'client-test', 'hello from client'
 

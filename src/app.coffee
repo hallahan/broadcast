@@ -23,22 +23,6 @@ sessionStore = new express.session.MemoryStore()
 # Is there a better way to get a hold of this function?
 parseCookie = require('../node_modules/express/node_modules/connect/lib/utils.js').parseCookie
 
-# Possible fix for MemoryStore's memory leak.
-# It leaks because when a session is destroyed, the
-# session is deleted, but the sessionStore hash then
-# points to null. So, it leaks by having a bunch of
-# hashes in the table pointing to null.
-
-# setInterval cleanMemory, 86400000 # 24 hrs
-# cleanMemory = -> 
-#   process.nextTick -> # keeps it async
-#     clean = {}
-#     dirty = sessionStore.sessions
-#     for session, sid in dirty
-#       clean[sid] = session
-#     sessionStore.sessions = clean
-#     delete dirty
-
 
 # Configuration
 app = module.exports = express.createServer()
@@ -71,7 +55,7 @@ io.set 'authorization', (data, accept) ->
     data.sid = data.cookie['sid']
     sessionStore.load data.sid, (err, session) ->
       if err or !session
-        accept 'Error or no session', false
+        accept 'No Session', false
       else
         data.session = session
         accept null, true
@@ -90,18 +74,18 @@ io.sockets.on 'connection', (socket) ->
   sesh = socket.handshake.session
 
   # Session ID for specific client
-  sesh.sid = sid = socket.handshake.sid
+  sid = socket.handshake.sid
 
-  # finds the user in the model if there is a uid
-  user = model.socketConnect(sesh)
+  # finds the user in the model if there is a uid in sesh
+  uid = model.socketConnect(sesh)
 
 
   # event sent by client on every key-up
   # relays broadcast message, but does not record it
   socket.on 'client-keyup', (broadcast) ->
-    if user
-      broadcast.time = user.activity()
-      broadcast.uid = sesh.uid
+    if uid
+      broadcast.time = model.userActivity(uid)
+      broadcast.uid = uid
       socket.broadcast.emit 'server-keyup', broadcast  # broadcast emits to everyone but sender
     else # we want to have identity associated with all clients
       socket.emit 'needs-login', null
@@ -109,9 +93,9 @@ io.sockets.on 'connection', (socket) ->
 
   # records broadcast message to the data model
   socket.on 'client-enter', (broadcast) ->
-    if user
-      broadcast.time = user.activity()
-      broadcast.uid = sesh.uid
+    if uid
+      broadcast.time = model.userActivity(uid)
+      broadcast.uid = uid
       socket.broadcast.emit 'server-log', model.logBroadcast broadcast 
     else
       socket.emit 'needs-login', null
@@ -120,29 +104,32 @@ io.sockets.on 'connection', (socket) ->
   # log-in credentials that make or retrieve a user from model
   socket.on 'login', (login) ->
     if login.name or login.email
-      user = model.login login.name, login.email
+      uid = model.login sesh, login.name, login.email
       sesh.reload ->
-        sesh.uid = user.uid # session knows what user it is
+        sesh.uid = uid # session now knows what user it is
         sesh.save()
     else
       socket.emit 'bad-login', null
 
   
+  # destroys session, model makes user inactive, broadcast inactivity
   socket.on 'logout', (logout) ->
+    model.logout sesh
     sesh.destroy() # deletes session from sessionStore
-    model.logout session
 
-  # Tell model about client disconnecting (to make user inactive)
+
+  # model deems user inactive and broadcasts inactive user
   socket.on 'disconnect', ->
-    model.socketDisconnect(sesh)
+    model.socketDisconnect sesh
 
 
   socket.on 'client-test', (data) ->
     console.log data
-    socket.emit 'server-test', 'hello' + util.timeStr(util.now())
+    socket.emit 'server-test', 'socket.io response: ' + util.timeStr(util.now())
 
 
-# Checks if the requester has a valid session.
+# Checks if the requester has a valid session. 
+# To be used as http route middleware.
 auth = (req, res, next) ->
   if req.session?.uid
     next()
@@ -152,18 +139,42 @@ auth = (req, res, next) ->
 
 # Routes
 app.get '/', (req, res) ->
+  req.session.ip = req.connection.remoteAddress
   res.sendfile('/index.html')
 
 
+# The data that is exposed to the client in http request.
 app.get '/data', (req, res) ->
+  req.session.ip = req.connection.remoteAddress
   res.end model.data()
 
 
 # Save to disk and show what was saved.
 app.get '/save', (req, res) ->
+  req.session.ip = req.connection.remoteAddress
   res.end model.save()
 
 
 # Start application.
 app.listen PORT, ->
   console.log "Broadcast server listening on port %d in %s mode", app.address().port, app.settings.env
+
+
+
+
+
+# Possible fix for MemoryStore's memory leak.
+# It leaks because when a session is destroyed, the
+# session is deleted, but the sessionStore hash then
+# points to null. So, it leaks by having a bunch of
+# hashes in the table pointing to null.
+
+# setInterval cleanMemory, 86400000 # 24 hrs
+# cleanMemory = -> 
+#   process.nextTick -> # keeps it async
+#     clean = {}
+#     dirty = sessionStore.sessions
+#     for session, sid in dirty
+#       clean[sid] = session
+#     sessionStore.sessions = clean
+#     delete dirty

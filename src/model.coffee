@@ -40,32 +40,58 @@ class User
     @uid = users.length
     @active = false
     @lastActivity = 0
-    @loginTimes = []
-    @logoutTimes = []
-    @socketConnectTimes = []
-    @socketDisconnectTimes = []
+    @ip = 0
+    @logins = []
+    @logouts = []
+    @socketConnects = []
+    @socketDisconnects = []
+
+  # Converts an array that was deserialized and makes
+  # it this class again. Static method.
+  @proselytize: (array) ->
+    faithful = []
+    for heathen in array
+      kin = new User(heathen.name, heathen.email)
+      for key in Object.keys(heathen)
+        kin[key] = heathen[key]
+      faithful.push kin
+    faithful
 
   # Updates the last point in time a user did something.
   # RETURNS the time of the activity, i.e. now.
-  activity: ->
+  activity: (ip) ->
+    @ip = ip
     t = util.now()
     @lastActivity = t
     @active = true
     t
 
-  login: ->
-    @loginTimes.push this.activity()
+  login: (ip) ->
+    @logins.push 
+      ip: ip
+      time: this.activity()
 
-  logout: ->
-    @logoutTimes.push util.now()
+  logout: (ip) ->
+    @logouts.push 
+      ip: ip
+      time: util.now()
     @active = false
 
-  socketConnect:->
-    @socketConnectTimes.push this.activity()
+  socketConnect: (ip) ->
+    @socketConnects.push 
+      ip: ip
+      time: this.activity()
 
-  socketDisconnect: ->
-    @socketDisconnectTimes.push util.now()
+  socketDisconnect: (ip) ->
+    @socketDisconnects.push 
+      ip: ip
+      time: util.now()
     @active = false
+
+
+# expose user.activity's functionality to app
+userActivity = (ip, uid) ->
+  users[uid].activity(ip)
 
 
 # Starts the model and sets up intervals that check for user activity
@@ -74,9 +100,7 @@ class User
 start = (sio) ->
   io = sio
   load()
-  
   # loadTestData(test)
-
   setInterval checkActivity, 10000    # 10 secs
   setInterval considerSaving, 600000  # 10 mins
 
@@ -90,9 +114,10 @@ load = ->
     logPath = "#{PROJ_DIR}/data/#{lastLog}.json"
     savedData = JSON.parse fs.readFileSync logPath, "utf8"
     log = savedData.log
-    users = savedData.users
+    users = User.proselytize savedData.users
     loadTimes = savedData.loadTimes
     saveTimes = savedData.saveTimes
+    anon = savedData.anon
   catch e
     console.log "saved data not loaded"
 
@@ -120,18 +145,21 @@ considerSaving = ->
 
 # Logs a user in or creates a user if that name/email
 # combo does not yet exist.
-login = (name, email) ->
+login = (session, name, email) ->
   user = u if u.name is name and u.email is email for u in users
   users.push(user = new User(name, email)) if !user
-  user.login()
-  user
+  user.login session.ip
+  user.uid
 
 
 logout = (session) ->
   if session.uid?
     user = users[session.uid]
-    user.logout()
-    io.sockets.emit('inactive', user.uid)
+    user.logout session.ip
+    io.sockets.emit 'inactive', user.uid
+    user.uid
+  else
+    null
 
 
 # Fetches and logs user associated with the session
@@ -139,11 +167,16 @@ logout = (session) ->
 socketConnect = (session) ->
   if session.uid?
     user = users[session.uid]
-    user.socketConnect()
-    io.sockets.emit('active', user.uid)
+    if user?
+      user.socketConnect(session.ip)
+      io.sockets.emit('active', user.uid)
+      user.uid
+    else
+      null
   else 
     anon.push
-      sid: session.sid
+      sid: session.id
+      ip: session.ip
       time: util.now()
       type: 'socketConnect'
     null
@@ -152,14 +185,19 @@ socketConnect = (session) ->
 socketDisconnect = (session) ->
   if session.uid?
     user = users[session.uid]
-    user.socketDisconnect()
-    io.sockets.emit('inactive', user.uid)
+    if user?
+      user.socketDisconnect(session.ip)
+      io.sockets.emit('inactive', user.uid)
+      user.uid
+    else
+      null
   else
     anon.push
       sid: session.sid
+      ip: session.ip
       time: util.now()
       type: 'socketDisconnect'
-
+    null
 
 # Goes through all of the users and checks
 # if they are still active. 
@@ -180,9 +218,10 @@ logBroadcast = (broadcast) ->
 
 # This gives data that will be exposed to the client.
 data = ->
-  JSON.stringify {users, activeUsers, log}, null, 2
+  JSON.stringify {users, log}, null, 2
 
 
+# only for testing
 loadTestData = (testData) ->
   users = testData.users
   log = testData.log
@@ -199,3 +238,4 @@ exports.logBroadcast      = logBroadcast
 exports.data              = data
 exports.socketConnect     = socketConnect
 exports.socketDisconnect  = socketDisconnect
+exports.userActivity      = userActivity
