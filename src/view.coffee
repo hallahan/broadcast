@@ -49,7 +49,6 @@ broadcasts = (log, users) ->
       str += """  </div>
                 </div>"""
       broadcastsPast(log, l, users)
-  console.log str
   $('#broadcasts').html str
 
 
@@ -82,8 +81,8 @@ broadcastsPast = (log, l, users) ->
     else
       str += """  </div>
                 </div>"""
-      console.log str
       broadcastsPast(log, next, users)
-  console.log 'broadcastsPast' + new Date(l.time)
+  null
+
 
 broadcast.view = {online, broadcasts}

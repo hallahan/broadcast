@@ -31,7 +31,7 @@ io          = {} #socket.io instance that we get from express app
 
 
 class User
-  constructor: (@name, @email, @sessionId) ->
+  constructor: (@name, @email) ->
     @uid = users.length
 
   # Updates the last point in time a user did something.
@@ -41,10 +41,11 @@ class User
     @lastActivity = t
     if @active is false
       @active = true
-      activeUsers.push this 
+      activeUsers.push @uid 
     t
 
   loginTimes: []
+  socketLoginTimes: []
 
 
 # Starts the model and sets up intervals that check for user activity
@@ -100,18 +101,28 @@ considerSaving = ->
 # combo does not yet exist.
 login = (name, email, sessionId) ->
   user = u if u.name is name and u.email is email for u in users
-  users.push(user = new User(name, email, sessionId)) if !user
-  user.sid = sessionId
+  users.push(user = new User(name, email)) if !user
   user.loginTimes.push user.activity() #activity returns now
   user
+
+
+# Fetches and logs user associated with the session
+# of the socket.
+socketLogin = (session) ->
+  user = users[session.uid?]
+  if user?
+    user.socketLoginTimes.push user.activity()
+    user
+  else
+    null
 
 
 # Goes through all of the active users and checks
 # if they are still active. 
 # RETURNS the active users.
 checkActivity = ->
-  for user, idx in activeUsers
-    if t - user.lastActivity > 10000
+  for uid, idx in activeUsers
+    if t - users[uid].lastActivity > 10000
       io.sockets.emit('inactive', user.uid)
       user.active = false
       activeUsers.splice idx, 1
@@ -126,8 +137,9 @@ logBroadcast = (broadcast) ->
   broadcast
 
 
-responseData = ->
-  JSON.stringify {activeUsers, log}, null, 2
+# This gives data that will be exposed to the client.
+data = ->
+  JSON.stringify {users, activeUsers, log}, null, 2
 
 
 loadTestData = (testData) ->
@@ -142,4 +154,5 @@ exports.save          = save
 exports.login         = login
 exports.checkActivity = checkActivity
 exports.logBroadcast  = logBroadcast
-exports.responseData  = responseData
+exports.data          = data
+exports.socketLogin   = socketLogin
