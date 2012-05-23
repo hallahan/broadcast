@@ -69,7 +69,7 @@ io.set 'authorization', (data, accept) ->
   if data.headers.cookie
     data.cookie = parseCookie data.headers.cookie
     data.sid = data.cookie['sid']
-    sessionStore.get data.sid, (err, session) ->
+    sessionStore.load data.sid, (err, session) ->
       if err or !session
         accept 'Error or no session', false
       else
@@ -90,10 +90,11 @@ io.sockets.on 'connection', (socket) ->
   sesh = socket.handshake.session
 
   # Session ID for specific client
-  sid = socket.handshake.sid
+  sesh.sid = sid = socket.handshake.sid
 
   # finds the user in the model if there is a uid
-  user = model.socketLogin(sesh)
+  user = model.socketConnect(sesh)
+
 
   # event sent by client on every key-up
   # relays broadcast message, but does not record it
@@ -105,28 +106,36 @@ io.sockets.on 'connection', (socket) ->
     else # we want to have identity associated with all clients
       socket.emit 'needs-login', null
 
+
   # records broadcast message to the data model
   socket.on 'client-enter', (broadcast) ->
     if user
       broadcast.time = user.activity()
       broadcast.uid = sesh.uid
-      socket.broadcast.emit 'server-log', model.log broadcast 
+      socket.broadcast.emit 'server-log', model.logBroadcast broadcast 
     else
       socket.emit 'needs-login', null
+
 
   # log-in credentials that make or retrieve a user from model
   socket.on 'login', (login) ->
     if login.name or login.email
-      user = model.login name, email
+      user = model.login login.name, login.email
       sesh.reload ->
         sesh.uid = user.uid # session knows what user it is
-        sesh.save() # saves updated object to sessionStore
+        sesh.save()
     else
       socket.emit 'bad-login', null
 
   
   socket.on 'logout', (logout) ->
     sesh.destroy() # deletes session from sessionStore
+    model.logout session
+
+  # Tell model about client disconnecting (to make user inactive)
+  socket.on 'disconnect', ->
+    model.socketDisconnect(sesh)
+
 
   socket.on 'client-test', (data) ->
     console.log data

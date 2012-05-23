@@ -8,8 +8,12 @@
 # manages the users and their sessions.
 
 
-# Constants
-LAST_LOG_PATH   = "#{__dirname}/../data/last-log.json" # determines which saved log is loaded.
+# Paths
+projDir = __dirname.split('/')
+projDir.pop()
+PROJ_DIR = projDir.join('/')
+LAST_LOG_PATH = PROJ_DIR + '/data/last-log.json' # determines which saved log is loaded
+
 
 # Requirements
 util  = require('./util')
@@ -22,6 +26,7 @@ log       = []
 users     = []
 loadTimes = []
 saveTimes = []
+anon      = [] 
 
 
 # not saved to disk
@@ -33,19 +38,34 @@ io          = {} #socket.io instance that we get from express app
 class User
   constructor: (@name, @email) ->
     @uid = users.length
+    @active = false
+    @lastActivity = 0
+    @loginTimes = []
+    @logoutTimes = []
+    @socketConnectTimes = []
+    @socketDisconnectTimes = []
 
   # Updates the last point in time a user did something.
   # RETURNS the time of the activity, i.e. now.
   activity: ->
     t = util.now()
     @lastActivity = t
-    if @active is false
-      @active = true
-      activeUsers.push @uid 
+    @active = true
     t
 
-  loginTimes: []
-  socketLoginTimes: []
+  login: ->
+    @loginTimes.push this.activity()
+
+  logout: ->
+    @logoutTimes.push util.now()
+    @active = false
+
+  socketConnect:->
+    @socketConnectTimes.push this.activity()
+
+  socketDisconnect: ->
+    @socketDisconnectTimes.push util.now()
+    @active = false
 
 
 # Starts the model and sets up intervals that check for user activity
@@ -67,7 +87,7 @@ load = ->
   loadTimes.push util.now()
   try
     lastLog = JSON.parse fs.readFileSync LAST_LOG_PATH, "utf8"
-    logPath = "#{__dirname}/../data/#{lastLog}.json"
+    logPath = "#{PROJ_DIR}/data/#{lastLog}.json"
     savedData = JSON.parse fs.readFileSync logPath, "utf8"
     log = savedData.log
     users = savedData.users
@@ -82,8 +102,8 @@ load = ->
 # RETURNS data as a string
 save = ->
   saveTimes.push util.now()
-  data = JSON.stringify { log, users, loadTimes, saveTimes }, null, 2
-  fs.writeFile "#{__dirname}/../data/#{saveTimes.length}.json", data, (err) ->
+  data = JSON.stringify { log, users, loadTimes, saveTimes, anon }, null, 2
+  fs.writeFile "#{PROJ_DIR}/data/#{saveTimes.length}.json", data, (err) ->
     console.log 'unable to save memory to disk: '+err if err
   fs.writeFile LAST_LOG_PATH, JSON.stringify(saveTimes.length), (err) ->
     console.log 'unable to save last log number to disk: '+err if err
@@ -97,42 +117,63 @@ considerSaving = ->
   if log.length > savedLen
     save()
 
+
 # Logs a user in or creates a user if that name/email
 # combo does not yet exist.
-login = (name, email, sessionId) ->
+login = (name, email) ->
   user = u if u.name is name and u.email is email for u in users
   users.push(user = new User(name, email)) if !user
-  user.loginTimes.push user.activity() #activity returns now
+  user.login()
   user
+
+
+logout = (session) ->
+  if session.uid?
+    user = users[session.uid]
+    user.logout()
+    io.sockets.emit('inactive', user.uid)
 
 
 # Fetches and logs user associated with the session
 # of the socket.
-socketLogin = (session) ->
-  user = users[session.uid?]
-  if user?
-    user.socketLoginTimes.push user.activity()
-    user
-  else
+socketConnect = (session) ->
+  if session.uid?
+    user = users[session.uid]
+    user.socketConnect()
+    io.sockets.emit('active', user.uid)
+  else 
+    anon.push
+      sid: session.sid
+      time: util.now()
+      type: 'socketConnect'
     null
 
 
-# Goes through all of the active users and checks
+socketDisconnect = (session) ->
+  if session.uid?
+    user = users[session.uid]
+    user.socketDisconnect()
+    io.sockets.emit('inactive', user.uid)
+  else
+    anon.push
+      sid: session.sid
+      time: util.now()
+      type: 'socketDisconnect'
+
+
+# Goes through all of the users and checks
 # if they are still active. 
-# RETURNS the active users.
 checkActivity = ->
-  for uid, idx in activeUsers
-    if t - users[uid].lastActivity > 10000
+  t = util.now()
+  for user in users
+    if t - user.lastActivity > 60000 # 1 min
       io.sockets.emit('inactive', user.uid)
       user.active = false
-      activeUsers.splice idx, 1
-  activeUsers
 
 
 # Adds a broadcast to the log.
 logBroadcast = (broadcast) ->
   broadcast.lid = log.length
-  broadcast.user = users[broadcast.lid]
   log.push broadcast
   broadcast
 
@@ -148,11 +189,13 @@ loadTestData = (testData) ->
 
 
 # Exports
-exports.users         = users
-exports.start         = start
-exports.save          = save
-exports.login         = login
-exports.checkActivity = checkActivity
-exports.logBroadcast  = logBroadcast
-exports.data          = data
-exports.socketLogin   = socketLogin
+exports.users             = users
+exports.start             = start
+exports.save              = save
+exports.login             = login
+exports.logout            = logout
+exports.checkActivity     = checkActivity
+exports.logBroadcast      = logBroadcast
+exports.data              = data
+exports.socketConnect     = socketConnect
+exports.socketDisconnect  = socketDisconnect

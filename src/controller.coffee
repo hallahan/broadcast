@@ -6,7 +6,7 @@
 # client side.
 
 view = broadcast.view
-socket = io.connect()
+broadcast.socket = socket = io.connect()
 
 #Get initial data from server.
 $.getJSON '/data', (data) ->
@@ -19,3 +19,7 @@ socket.emit 'client-test', 'hello from client'
 
 socket.on 'server-test', (data) ->
 	console.log 'data from server: ' + data
+
+socket.on 'needs-login', (nothing) ->
+  console.log 'needs login'
+  
