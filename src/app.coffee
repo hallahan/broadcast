@@ -108,6 +108,7 @@ io.sockets.on 'connection', (socket) ->
       sesh.reload ->
         sesh.uid = uid # session now knows what user it is
         sesh.save()
+      socket.emit 'iam', uid
     else
       socket.emit 'bad-login', null
 
@@ -125,13 +126,13 @@ io.sockets.on 'connection', (socket) ->
 
   socket.on 'client-test', (data) ->
     console.log data
-    socket.emit 'server-test', 'socket.io response: ' + util.timeStr(util.now())
+    socket.emit 'server-test', 'hi ' + util.timeStr(util.now())
 
 
 # Checks if the requester has a valid session. 
 # To be used as http route middleware.
 auth = (req, res, next) ->
-  if req.session?.uid
+  if req.session?.uid?
     next()
   else
     res.redirect('/')
@@ -145,8 +146,13 @@ app.get '/', (req, res) ->
 
 # The data that is exposed to the client in http request.
 app.get '/data', (req, res) ->
-  req.session.ip = req.connection.remoteAddress
-  res.end model.data()
+  req.session?.ip = req.connection.remoteAddress
+  data = model.data()
+  if uid = req.session?.uid?
+    data.iam = uid
+  else
+    data.iam = null
+  res.end JSON.stringify data, null, 2
 
 
 # Save to disk and show what was saved.

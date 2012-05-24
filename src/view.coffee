@@ -33,10 +33,11 @@ broadcasts = (log, users) ->
                     </a>
                   </div>
                   <div id="broadcast-today" class="accordion-body collapse in">
-                    <div id="broadcast-future"></div>
-                    <div class="accordion-inner">
+                    <div id="input-active"></div>
+                    <div id="broadcast-input" class="accordion-inner">
                       <textarea id="broadcast-text-area" class="broadcast-text-area" rows="2"></textarea>
-                    </div>"""
+                    </div>
+                    <div id="input-inactive"></div>"""
   while l = log?.pop()
     if util.isToday l.time
       str += """    <div class="accordion-inner">
@@ -85,4 +86,85 @@ broadcastsPast = (log, l, users) ->
   null
 
 
-broadcast.view = {online, broadcasts}
+login = () ->
+  str = """ <form class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label" for="name">Who are you? </label>
+                <div class="controls">
+                  <input id="name" type="text">
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="email">Email <i>(optional)</i></label>
+                <div class="controls">
+                  <input id="email" type="text">
+                </div>
+              </div>
+            </form>"""
+  $('#broadcast-input').html str
+
+
+loginFailed = () ->
+  str = """ <form class="form-horizontal">
+              <div class="alert alert-error fade in">
+                <button class="close" data-dismiss="alert">&times;</button>
+                <strong>Login Failed:</strong><br/>You must enter your name and / or email.
+              </div>
+              <div class="control-group error">
+                <label class="control-label" for="name">Who are you? </label>
+                <div class="controls">
+                  <input id="name" type="text">
+                </div>
+              </div>
+              <div class="control-group error">
+                <label class="control-label" for="email">Email <i>(optional)</i></label>
+                <div class="controls">
+                  <input id="email" type="text">
+                </div>
+              </div>
+            </form>"""
+  $('#broadcast-input').html(str)
+
+
+textArea = () ->
+  str = """<textarea id="broadcast-text-area" class="broadcast-text-area" rows="2"></textarea>"""
+  $('#broadcast-input').html str
+
+
+broadcastKeyup = (user, broadcast) ->
+  bid = broadcast.uid
+  if !document.getElementById bid
+    createBroadcast broadcast
+  else
+    console.log 'todo'
+
+
+broadcastEnter = (user, broadcast) ->
+  bid = broadcast.uid
+  if !document.getElementById bid
+    createBroadcast broadcast
+  else
+    console.log 'todo'
+  $('#'+bid).removeAttr 'id'
+
+
+glow = (caretPos, broadcast) ->
+  text = broadcast.text
+  el = $('#'+broadcast.uid)
+  el.find('.broadcast-time').html util.timeStr(broadcast.time)
+  el.find('.broadcast-text').html text
+
+
+# first knowledge of a specific broadcast from server
+createBroadcast = (prependDiv, user, broadcast) ->
+  str = """ <div id="#{broadcast.uid}" class="accordion-inner">
+              <strong>#{user.name||user.email}</strong>
+              <span class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
+              <br/>
+              <span class="broadcast-text">#{broadcast.text}</span>
+            </div>"""
+  $('#'+prependDiv).prepend str
+
+
+
+broadcast.view = {online, broadcasts, login, loginFailed, textArea, broadcastKeyup, broadcastEnter, glow, createBroadcast}

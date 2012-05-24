@@ -218,7 +218,7 @@ logBroadcast = (broadcast) ->
 
 # This gives data that will be exposed to the client.
 data = ->
-  JSON.stringify {users, log}, null, 2
+  {users, log}
 
 
 # only for testing

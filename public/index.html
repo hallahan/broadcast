@@ -22,18 +22,27 @@
       </div>
       <div class="row">
         <div class="span4 columns">
-          <h2>Demo Stack</h2>
+          <h2>The Concept</h2>
+          <p>
+            Your browser can send any data of any form to the server, and the server does not necessarily need to keep it. It can simply be a middle man that relays data you send out to everyone currenltly connected. It has a new role: instead of archiving information, it broadcasts information.
+          </p>
+          <p>
+            Imagine how cool this will be when you can send files...
+          </p>
           <p>
             Try it out! Click on the text box and leave a message. See people type as they go... 
+          <hr/>
+          <h3>About</h3>
+          <p>
+            This web application uses <a href="http://socket.io/">socket.io</a> to create full-duplex communication between the client and the server. All data is stored as .json files on the server and is loaded into memory by <a href="http://nodejs.org/">NodeJS</a>. Your typing is simply relayed to other connected users, but once you hit enter, it is recorded by the server.
+          </p>
           <hr/>
           <h3>How It Works</h3>
           <p>
           	You can put a stack on any <a href="https://github.com/WardCunningham/Smallest-Federated-Wiki">Smallest Federated Wiki</a> page, and all of the content broadcast on each individual stack is independent from the others. This app is run along side a SFW farm, and your username is associated with all of the stacks created within a farm.
           </p>
-          <hr/>
-          <h3>About</h3>
           <p>
-            This web application uses <a href="http://socket.io/">socket.io</a> to create full-duplex communication between the client and the server. All data is stored as .json files on the server and is loaded into memory by <a href="http://nodejs.org/">NodeJS</a>.
+            On the other hand, you can simply put this on any web server. This demo here is stand-alone. You can integrate it into your page, or you can have an iframe that refers to another server.
           </p>
        </div>
         <div class="span5 columns">
@@ -41,7 +50,9 @@
 
           <!-- online accordion -->
           <div class="accordion" id="broadcast-online">
-            <div class="accordion-group" id="broadcast-online-tmpl"></div>
+            <div class="accordion-group" id="broadcast-online-tmpl">
+              Retrieving data from server...
+            </div>
           </div>
 
 
