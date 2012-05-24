@@ -63,7 +63,9 @@ class User
     @ip = ip
     t = util.now()
     @lastActivity = t
-    @active = true
+    if @active == false
+      @active = true
+      io.sockets.emit 'active', @uid
     t
 
   login: (ip) ->
@@ -146,8 +148,13 @@ considerSaving = ->
 # Logs a user in or creates a user if that name/email
 # combo does not yet exist.
 login = (session, name, email) ->
-  user = u if u.name is name and u.email is email for u in users
-  users.push(user = new User(name, email)) if !user
+  for u in users
+    if u.name is name and u.email is email
+      user = u
+      break
+  if !user
+    users.push(user = new User(name, email))
+    io.sockets.emit 'new-user', user
   user.login session.ip
   user.uid
 

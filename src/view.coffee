@@ -89,15 +89,15 @@ broadcastsPast = (log, l, users) ->
 login = () ->
   str = """ <form class="form-horizontal">
               <div class="control-group">
-                <label class="control-label" for="name">Who are you? </label>
+                <label class="control-label" for="broadcast-name">Who are you? </label>
                 <div class="controls">
-                  <input id="name" type="text">
+                  <input id="broadcast-name" type="text">
                 </div>
               </div>
               <div class="control-group">
-                <label class="control-label" for="email">Email <i>(optional)</i></label>
+                <label class="control-label" for="broadcast-email">Email <i>(optional)</i></label>
                 <div class="controls">
-                  <input id="email" type="text">
+                  <input id="broadcast-email" type="text">
                 </div>
               </div>
             </form>"""
@@ -111,15 +111,15 @@ loginFailed = () ->
                 <strong>Login Failed:</strong><br/>You must enter your name and / or email.
               </div>
               <div class="control-group error">
-                <label class="control-label" for="name">Who are you? </label>
+                <label class="control-label" for="broadcast-name">Who are you? </label>
                 <div class="controls">
-                  <input id="name" type="text">
+                  <input id="broadcast-name" type="text">
                 </div>
               </div>
               <div class="control-group error">
-                <label class="control-label" for="email">Email <i>(optional)</i></label>
+                <label class="control-label" for="broadcast-email">Email <i>(optional)</i></label>
                 <div class="controls">
-                  <input id="email" type="text">
+                  <input id="broadcast-email" type="text">
                 </div>
               </div>
             </form>"""

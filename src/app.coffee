@@ -83,6 +83,7 @@ io.sockets.on 'connection', (socket) ->
   # event sent by client on every key-up
   # relays broadcast message, but does not record it
   socket.on 'client-keyup', (broadcast) ->
+    console.log 'client-keyup', broadcast
     if uid
       broadcast.time = model.userActivity(uid)
       broadcast.uid = uid
