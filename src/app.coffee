@@ -84,7 +84,7 @@ io.sockets.on 'connection', (socket) ->
   # event sent by client on every key-up
   # relays broadcast message, but does not record it
   socket.on 'client-keyup', (broadcast) ->
-    console.log 'client-keyup', broadcast
+    console.log 'client-keyup'
     if uid?
       broadcast.time = model.userActivity(sesh.ip, uid)
       broadcast.uid = uid
@@ -95,6 +95,7 @@ io.sockets.on 'connection', (socket) ->
 
   # records broadcast message to the data model
   socket.on 'client-enter', (broadcast) ->
+    console.log 'client-enter'
     if uid?
       broadcast.time = model.userActivity(sesh.ip, uid)
       broadcast.uid = uid
@@ -130,6 +131,11 @@ io.sockets.on 'connection', (socket) ->
   socket.on 'client-test', (data) ->
     console.log data
     socket.emit 'server-test', 'hi ' + util.timeStr(util.now())
+
+
+  socket.on 'here', (uid) ->
+    console.log uid+' is here.'
+    model.userActivity sesh.ip, uid
 
 
 # Checks if the requester has a valid session. 

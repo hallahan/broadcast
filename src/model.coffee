@@ -95,7 +95,9 @@ class User
 
 # expose user.activity's functionality to app
 userActivity = (ip, uid) ->
-  users[uid].activity(ip)
+  u = users[uid]
+  if u?
+    u.activity(ip)
 
 
 # Starts the model and sets up intervals that check for user activity
@@ -105,7 +107,7 @@ start = (sio) ->
   io = sio
   load()
   # loadTestData(test)
-  setInterval checkActivity, 10000    # 10 secs
+  setInterval checkActivity, 7000     # 7 secs
   setInterval considerSaving, 600000  # 10 mins
 
 
@@ -216,7 +218,7 @@ socketDisconnect = (session) ->
 checkActivity = ->
   t = util.now()
   for user in users
-    if user.active is true and t - user.lastActivity > 10000 # 10 secs
+    if user.active is true and t - user.lastActivity > 7000 # 7 secs
       io.sockets.emit('inactive', user.uid)
       user.active = false
 

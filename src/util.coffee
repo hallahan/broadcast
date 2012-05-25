@@ -27,7 +27,8 @@ timeStr = (time) ->
   mer = 'AM'
   if h > 11
     h %= 12
-    mer = 'PM' 
+    mer = 'PM'
+  if h is 0 then h=12
   m = '0' + m if m < 10
   s = '0' + s if s < 10
   "#{h}:#{m}:#{s} #{mer}"

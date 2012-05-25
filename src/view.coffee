@@ -157,11 +157,11 @@ textArea = () ->
 
 # first knowledge of a specific broadcast from server
 createBroadcast = (prependDiv, user, broadcast) ->
-  str = """ <div id="#b{broadcast.uid}" class="accordion-inner">
+  str = """ <div id="b#{broadcast.uid}" class="accordion-inner">
               <strong>#{user.name||user.email}</strong>
-              <span id="#btime{broadcast.uid}"class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
+              <span id="btime#{broadcast.uid}"class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
               <br/>
-              <span id="#btext{broadcast.uid}"class="broadcast-text glow">#{broadcast.text}</span>
+              <span id="btext#{broadcast.uid}"class="broadcast-text glow">#{broadcast.text}</span>
             </div>"""
   $('#'+prependDiv).prepend str
   $('#btext'+broadcast.uid).removeClass 'glow', 1000 # 1 second

@@ -36,6 +36,7 @@ live = ->
   # Good to give this to broadcast so we can talk in console.
   broadcast.socket = socket = io.connect()
   socket.emit 'client-test', "hi: #{util.timeStr util.now()}"
+  if model.iam then imHere(true)
   listen()
 
 
@@ -83,6 +84,7 @@ listen = ->
   socket.on 'iam', (uid) ->
     console.log ['iam', uid]
     model.iam = uid
+    imHere(true)
     view.textArea()
     $('#broadcast-text-area').bind 'keyup click', textAreaEventHandler
 
@@ -136,7 +138,7 @@ broadcastKeyup = (broadcast) ->
 
 broadcastEnter = (broadcast) ->
   broadcastKeyup broadcast
-  $('#'+broadcast.uid).removeAttr 'id'
+  $('#b'+broadcast.uid).removeAttr 'id'
 
 
 textAreaEventHandler = (event) ->
@@ -158,7 +160,8 @@ textAreaEventHandler = (event) ->
     $('#broadcast-text-area').val('').focus()
     textAreaActive = false
     socket.emit 'client-enter', broadcast
-  socket.emit 'client-keyup', broadcast
+  else
+    socket.emit 'client-keyup', broadcast
 
 
 loginFormEventHandler = (event) ->
@@ -195,10 +198,11 @@ glow = (broadcast) ->
   text = broadcast.text
   selStart = broadcast.pos.start
   selEnd = broadcast.pos.end
+  newCharIdx = selStart-1
+  glowText = text.charAt newCharIdx
+  if glowText == '\n' then return
   if selStart == selEnd # just caret position, no selected text
-    newCharIdx = selStart-1
     beforeText = text.slice(0,newCharIdx)
-    glowText = text[newCharIdx]
     afterText = text.slice(selEnd)
   else # there is selected text
     beforeText = text.slice(0,selStart)
@@ -214,3 +218,19 @@ glow = (broadcast) ->
   $('#g'+glowId).removeClass 'glow', 1000 # 1 second
 
   glowId++
+
+
+# keep telling server of prescence to stay online
+alreadyOn = false
+intervalId = 0
+imHere = (boolean) ->
+  if boolean is true and alreadyOn is false
+    intervalId = setInterval ->
+      console.log """I'm here!"""
+      socket.emit 'here', model.iam
+    , 6543
+    alreadyOn = true
+  else
+    clearInterval intervalId
+    alreadyOn = false
+
