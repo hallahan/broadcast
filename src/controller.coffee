@@ -36,7 +36,7 @@ live = ->
   # Good to give this to broadcast so we can talk in console.
   broadcast.socket = socket = io.connect()
   socket.emit 'client-test', "hi: #{util.timeStr util.now()}"
-  if model.iam then imHere(true)
+  if model?.iam? then imHere(true)
   listen()
 
 
@@ -226,7 +226,7 @@ intervalId = 0
 imHere = (boolean) ->
   if boolean is true and alreadyOn is false
     intervalId = setInterval ->
-      console.log """I'm here!"""
+      console.log """I'm here! ( #{model.iam} )"""
       socket.emit 'here', model.iam
     , 6543
     alreadyOn = true

@@ -157,7 +157,8 @@ app.get '/', (req, res) ->
 app.get '/data', (req, res) ->
   req.session?.ip = req.connection.remoteAddress
   data = model.data()
-  if uid = req.session?.uid?
+  uid = req.session.uid
+  if uid?
     data.iam = uid
   else
     data.iam = null
