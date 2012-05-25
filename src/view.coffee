@@ -1,16 +1,16 @@
-# The Outpost Broadcast for The Smallest Federated Wiki
+# Broadcast.TheOutpost.io
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
 util = broadcast.util
 str = ''
-
+onlineCount = 0
 
 # Online Users Accordion
 online = (users) -> 
   str =     """ <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#broadcast-online" href="#broadcast-users">
-                    <strong>Online</strong> ( #{users.length} )
+                    <strong>Online</strong> ( <span id="online">#{onlineCount=users.length}</span> )
                   </a>
                 </div>
                 <div id="broadcast-users" class="accordion-body collapse in">""" 
@@ -22,6 +22,30 @@ online = (users) ->
   str +=    """ </div>"""
 
   $('#broadcast-online-tmpl').html str
+
+
+userOnline = (user) ->
+  str =     """   <div data-uid=#{user.uid} class="accordion-inner">
+                    <strong>#{user.name||util.emptyStr}</strong>
+                    <span class="broadcast-email">#{user.email||util.emptyStr}</span>
+                  </div>"""
+
+  $('#broadcast-users').prepend str
+  $('#online').html ++onlineCount
+
+
+userOffline = (user) ->
+  $("div[data-uid=\"#{user.uid}\"]").remove()
+  $('#online').html --onlineCount
+
+
+newInput = ->
+  str = """ <div id="input-active"></div>
+            <div id="broadcast-input" class="accordion-inner">
+              <textarea id="broadcast-text-area" class="broadcast-text-area" rows="2"></textarea>
+            </div>
+            <div id="input-inactive"></div>"""
+  $('#broadcast-today').prepend str
 
 
 # Entire log of broadcasts
@@ -131,40 +155,25 @@ textArea = () ->
   $('#broadcast-input').html str
 
 
-broadcastKeyup = (user, broadcast) ->
-  bid = broadcast.uid
-  if !document.getElementById bid
-    createBroadcast broadcast
-  else
-    console.log 'todo'
-
-
-broadcastEnter = (user, broadcast) ->
-  bid = broadcast.uid
-  if !document.getElementById bid
-    createBroadcast broadcast
-  else
-    console.log 'todo'
-  $('#'+bid).removeAttr 'id'
-
-
-glow = (caretPos, broadcast) ->
-  text = broadcast.text
-  el = $('#'+broadcast.uid)
-  el.find('.broadcast-time').html util.timeStr(broadcast.time)
-  el.find('.broadcast-text').html text
-
-
 # first knowledge of a specific broadcast from server
 createBroadcast = (prependDiv, user, broadcast) ->
-  str = """ <div id="#{broadcast.uid}" class="accordion-inner">
+  str = """ <div id="#b{broadcast.uid}" class="accordion-inner">
               <strong>#{user.name||user.email}</strong>
-              <span class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
+              <span id="#btime{broadcast.uid}"class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
               <br/>
-              <span class="broadcast-text">#{broadcast.text}</span>
+              <span id="#btext{broadcast.uid}"class="broadcast-text glow">#{broadcast.text}</span>
             </div>"""
   $('#'+prependDiv).prepend str
+  $('#btext'+broadcast.uid).removeClass 'glow', 1000 # 1 second
 
 
-
-broadcast.view = {online, broadcasts, login, loginFailed, textArea, broadcastKeyup, broadcastEnter, glow, createBroadcast}
+broadcast.view = 
+  online            : online
+  userOnline        : userOnline
+  userOffline       : userOffline
+  broadcasts        : broadcasts
+  login             : login
+  loginFailed       : loginFailed
+  textArea          : textArea
+  createBroadcast   : createBroadcast
+  newInput          : newInput

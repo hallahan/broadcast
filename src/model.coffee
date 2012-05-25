@@ -1,4 +1,4 @@
-# The Outpost Broadcast for The Smallest Federated Wiki
+# Broadcast.TheOutpost.io
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
@@ -26,7 +26,8 @@ log       = []
 users     = []
 loadTimes = []
 saveTimes = []
-anon      = [] 
+anon      = []
+sidToUid  = {} # hash sid, get uid
 
 
 # not saved to disk
@@ -52,6 +53,7 @@ class User
     faithful = []
     for heathen in array
       kin = new User(heathen.name, heathen.email)
+      kin.active = false # when the server starts, we don't want to have anyone be active
       for key in Object.keys(heathen)
         kin[key] = heathen[key]
       faithful.push kin
@@ -129,7 +131,7 @@ load = ->
 # RETURNS data as a string
 save = ->
   saveTimes.push util.now()
-  data = JSON.stringify { log, users, loadTimes, saveTimes, anon }, null, 2
+  data = JSON.stringify { log, users, loadTimes, saveTimes, anon, sidToUid }, null, 2
   fs.writeFile "#{PROJ_DIR}/data/#{saveTimes.length}.json", data, (err) ->
     console.log 'unable to save memory to disk: '+err if err
   fs.writeFile LAST_LOG_PATH, JSON.stringify(saveTimes.length), (err) ->
@@ -156,14 +158,16 @@ login = (session, name, email) ->
     users.push(user = new User(name, email))
     io.sockets.emit 'new-user', user
   user.login session.ip
+  sidToUid[session.id] = user.uid
   user.uid
 
 
 logout = (session) ->
-  if session.uid?
-    user = users[session.uid]
+  if uid = sidToUid[session.id]?
+    user = users[uid]
     user.logout session.ip
     io.sockets.emit 'inactive', user.uid
+    sidToUid[session.id] = null
     user.uid
   else
     null
@@ -172,11 +176,11 @@ logout = (session) ->
 # Fetches and logs user associated with the session
 # of the socket.
 socketConnect = (session) ->
-  if session.uid?
-    user = users[session.uid]
+  uid = sidToUid[session.id]
+  if uid?
+    user = users[uid]
     if user?
       user.socketConnect(session.ip)
-      io.sockets.emit('active', user.uid)
       user.uid
     else
       null
@@ -190,8 +194,8 @@ socketConnect = (session) ->
 
 
 socketDisconnect = (session) ->
-  if session.uid?
-    user = users[session.uid]
+  if uid = sidToUid[session.id]?
+    user = users[uid]
     if user?
       user.socketDisconnect(session.ip)
       io.sockets.emit('inactive', user.uid)
@@ -206,12 +210,13 @@ socketDisconnect = (session) ->
       type: 'socketDisconnect'
     null
 
+
 # Goes through all of the users and checks
 # if they are still active. 
 checkActivity = ->
   t = util.now()
   for user in users
-    if t - user.lastActivity > 60000 # 1 min
+    if user.active is true and t - user.lastActivity > 10000 # 10 secs
       io.sockets.emit('inactive', user.uid)
       user.active = false
 

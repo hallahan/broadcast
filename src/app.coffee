@@ -1,4 +1,4 @@
-# The Outpost Broadcast for The Smallest Federated Wiki
+# Broadcast.TheOutpost.io
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
@@ -49,6 +49,7 @@ app.configure 'production', ->
 io = sio.listen app
 
 
+# Not used, but availible for controlling standard http requests.
 io.set 'authorization', (data, accept) ->
   if data.headers.cookie
     data.cookie = parseCookie data.headers.cookie
@@ -76,7 +77,7 @@ io.sockets.on 'connection', (socket) ->
   # Session ID for specific client
   sid = socket.handshake.sid
 
-  # finds the user in the model if there is a uid in sesh
+  # finds the user in the model if there is a uid in sesh, broadcasts user activity
   uid = model.socketConnect(sesh)
 
 
@@ -84,8 +85,8 @@ io.sockets.on 'connection', (socket) ->
   # relays broadcast message, but does not record it
   socket.on 'client-keyup', (broadcast) ->
     console.log 'client-keyup', broadcast
-    if uid
-      broadcast.time = model.userActivity(uid)
+    if uid?
+      broadcast.time = model.userActivity(sesh.ip, uid)
       broadcast.uid = uid
       socket.broadcast.emit 'server-keyup', broadcast  # broadcast emits to everyone but sender
     else # we want to have identity associated with all clients
@@ -94,10 +95,10 @@ io.sockets.on 'connection', (socket) ->
 
   # records broadcast message to the data model
   socket.on 'client-enter', (broadcast) ->
-    if uid
-      broadcast.time = model.userActivity(uid)
+    if uid?
+      broadcast.time = model.userActivity(sesh.ip, uid)
       broadcast.uid = uid
-      socket.broadcast.emit 'server-log', model.logBroadcast broadcast 
+      io.sockets.emit 'server-enter', model.logBroadcast broadcast 
     else
       socket.emit 'needs-login', null
 
@@ -125,6 +126,7 @@ io.sockets.on 'connection', (socket) ->
     model.socketDisconnect sesh
 
 
+  # says hello
   socket.on 'client-test', (data) ->
     console.log data
     socket.emit 'server-test', 'hi ' + util.timeStr(util.now())

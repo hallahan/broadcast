@@ -1,4 +1,4 @@
-# The Outpost Broadcast for The Smallest Federated Wiki
+# Broadcast.TheOutpost.io
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
