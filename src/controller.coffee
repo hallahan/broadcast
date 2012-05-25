@@ -128,7 +128,10 @@ determineActiveUsers = () ->
 broadcastKeyup = (broadcast) ->
   bid = 'b'+broadcast.uid
   if !document.getElementById bid
-    if textAreaActive
+    if broadcast.uid is model.iam
+      view.createBroadcast 'old', model.users[broadcast.uid], broadcast
+      $('#old').replaceWith($('#old').children())
+    else if textAreaActive
       view.createBroadcast 'input-active', model.users[broadcast.uid], broadcast
     else
       view.createBroadcast 'input-inactive', model.users[broadcast.uid], broadcast
@@ -151,8 +154,8 @@ textAreaEventHandler = (event) ->
   if event.which == 13 # enter key
     # Get rid of the '\n' at the end.
     broadcast.text = text.substring(0,text.length-1)
-    $('#input-active').removeAttr('id')
-    $('#input-inactive').removeAttr('id')
+    $('#input-active').replaceWith $('#input-active').children()
+    $('#input-inactive').attr('id','old')
     input = $('#broadcast-input')
     input.prependTo('#broadcast-today')
     input.before """<div id="input-active"></div>"""
@@ -172,6 +175,7 @@ loginFormEventHandler = (event) ->
       socket.emit 'login', {name, email}
     else
       view.loginFailed()
+    textAreaActive = false
 
 
 # If the start and the end are the same, that is the caret position.
