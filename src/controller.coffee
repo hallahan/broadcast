@@ -81,11 +81,14 @@ listen = ->
 
 
   # the user id of the client, null if not logged in
+  # This happens after the client successfully logs in.
+  # We need a new text area on top of the stack.
   socket.on 'iam', (uid) ->
     console.log ['iam', uid]
     model.iam = uid
     imHere(true)
-    view.textArea()
+    view.textArea() # actually have text area
+    freshTextArea() # puts that text area on top
     $('#broadcast-text-area').bind 'keyup click', textAreaEventHandler
 
     # TODO: Indicate which user I am in Online List.
@@ -154,17 +157,21 @@ textAreaEventHandler = (event) ->
   if event.which == 13 # enter key
     # Get rid of the '\n' at the end.
     broadcast.text = text.substring(0,text.length-1)
-    $('#input-active').replaceWith $('#input-active').children()
-    $('#input-inactive').attr('id','old')
-    input = $('#broadcast-input')
-    input.prependTo('#broadcast-today')
-    input.before """<div id="input-active"></div>"""
-    input.after  """<div id="input-inactive"></div>"""
-    $('#broadcast-text-area').val('').focus()
-    textAreaActive = false
+    freshTextArea()
     socket.emit 'client-enter', broadcast
   else
     socket.emit 'client-keyup', broadcast
+
+
+freshTextArea = ->
+  $('#input-active').replaceWith $('#input-active').children()
+  $('#input-inactive').attr('id','old')
+  input = $('#broadcast-input')
+  input.prependTo('#broadcast-today')
+  input.before """<div id="input-active"></div>"""
+  input.after  """<div id="input-inactive"></div>"""
+  $('#broadcast-text-area').val('').focus()
+  textAreaActive = false
 
 
 loginFormEventHandler = (event) ->

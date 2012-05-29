@@ -6,5 +6,5 @@
 .idea
 /node_modules
 /lib
-/public/*.js
 /data
+/public/*.js
