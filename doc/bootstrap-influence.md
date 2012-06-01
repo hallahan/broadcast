@@ -5,13 +5,13 @@ These are the classes I took from bootstrap. I am not using bootstrap as a whole
 
 It has been significantly tweaked from the standard settings, so things might not work properly if you choose to sub back in Bootstrap.
 
+* accordion
+* accordion-group
+* accordion-heading
+* accordion-toggle
+* accordion-body
+* accordion-inner
 
-*accordion
-*accordion-group
-*accordion-heading
-*accordion-toggle
-*accordion-body
-*accordion-inner
-
-*collapse
-*in
+Classes that are more functional than styling:
+* collapse
+* in
