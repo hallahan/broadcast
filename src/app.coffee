@@ -24,12 +24,20 @@ sessionStore = new express.session.MemoryStore()
 parseCookie = require('../node_modules/express/node_modules/connect/lib/utils.js').parseCookie
 
 
+# Serve a request from any origin.
+allowCrossOrigin = (req, res, next) ->
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  next()
+
+  
 # Configuration
 app = module.exports = express.createServer()
 app.configure ->
   app.use express.bodyParser()
   app.use express.methodOverride()
   app.use express.cookieParser()
+  app.use allowCrossOrigin
   app.use express.session
     key: 'sid'
     store: sessionStore
@@ -146,6 +154,11 @@ auth = (req, res, next) ->
   else
     res.redirect('/')
 
+
+app.get '/hello', (req, res) ->
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  res.send util
 
 # Routes
 app.get '/', (req, res) ->

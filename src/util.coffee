@@ -10,6 +10,8 @@
 now = ->
   new Date().getTime()
 
+nowStr = ->
+  timeStr now()
 
 todayStr = ->
   new Date().toDateString()

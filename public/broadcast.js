@@ -1,5 +1,6 @@
 var broadcast = {
 	util: {},
 	view: {},
-	socket: {}
-}
+	socket: {},
+	url: ''
+};

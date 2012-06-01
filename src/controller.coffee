@@ -9,6 +9,7 @@
 util    = broadcast.util
 view    = broadcast.view
 socket  = broadcast.socket
+url     = broadcast.url
 
 # pack with data structures for the controller to use
 broadcast.model = model = {}
@@ -16,7 +17,7 @@ textAreaActive = false
 
 
 #Get initial data from server.
-$.getJSON '/data', (data) ->
+$.getJSON "#{url}/data", (data) ->
 
   # Make data availible in the client model.
   model = data
@@ -34,7 +35,7 @@ $.getJSON '/data', (data) ->
 # gotten our initial data from the data http response.
 live = ->
   # Good to give this to broadcast so we can talk in console.
-  broadcast.socket = socket = io.connect()
+  broadcast.socket = socket = io.connect(url)
   socket.emit 'client-test', "hi: #{util.timeStr util.now()}"
   if model?.iam? then imHere(true)
   listen()
