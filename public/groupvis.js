@@ -9,6 +9,6 @@ console.log('were here');
 // }, 1000);
 
 
-socket.on('server-test', function(data) {
-    console.log('server-test', data);
-});
+// socket.on('server-test', function(data) {
+//     console.log('server-test', data);
+// });

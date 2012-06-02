@@ -57,6 +57,29 @@ live = ->
   $('#broadcast-text-area').bind 'keyup click', textAreaEventHandler
 
 
+chartData = 
+  e: 
+    words : []
+    count : 0
+  i: 
+    words : []
+    count : 0
+  d: 
+    words : []
+    count : 0
+  s: 
+    words : []
+    count : 0
+  a: 
+    words : []
+    count : 0
+  p: 
+    words : []
+    count : 0
+  u: 
+    words : []
+    count : 0
+
 # Recieve all of the events broadcast from server
 listen = ->
 
@@ -64,7 +87,64 @@ listen = ->
     console.log 'server-test: ' + data
 
   socket.on 'emoo', (data) ->
-    console.log ['emoo: ' + data ]
+    pollData = JSON.parse(data)
+    console.log ['emoo: ', pollData ]
+    chartData = 
+      e: 
+        words : []
+        count : 0
+      i: 
+        words : []
+        count : 0
+      d: 
+        words : []
+        count : 0
+      s: 
+        words : []
+        count : 0
+      a: 
+        words : []
+        count : 0
+      p: 
+        words : []
+        count : 0
+      u: 
+        words : []
+        count : 0
+
+    for word in pollData.words
+      switch word.type
+        when 'E'
+          chartData.e.count += 1
+          chartData.e.words.push word.word
+        when 'I'
+          chartData.i.count += 1
+          chartData.i.words.push word.word
+        when 'D'
+          chartData.d.count += 1
+          chartData.d.words.push word.word
+        when 'S'
+          chartData.s.count += 1
+          chartData.s.words.push word.word
+        when 'A'
+          chartData.a.count += 1
+          chartData.a.words.push word.word
+        when 'P'
+          chartData.p.count += 1
+          chartData.p.words.push word.word
+        when 'U'
+          chartData.u.count += 1
+          chartData.u.words.push word.word
+
+
+    console.log ['chartData', chartData]
+
+
+
+
+
+
+
 
   socket.on 'needs-login', (nothing) ->
     console.log 'needs-login'

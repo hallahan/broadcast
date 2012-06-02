@@ -192,7 +192,7 @@ app.listen PORT, ->
 intervalId = setInterval ->
   console.log 'timer'
       
-  request 'http://www.google.com', (error, response, body) ->
+  request 'http://emoo.me/api/emoome/get_thoughts_words/id/9', (error, response, body) ->
     if (!error && response.statusCode == 200)
       console.log(body) 
       io.sockets.emit 'emoo', body

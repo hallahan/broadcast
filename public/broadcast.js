@@ -522,7 +522,7 @@ require.define("/view.coffee", function (require, module, exports, __dirname, __
 
 require.define("/controller.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var alreadyOn, broadcastEnter, broadcastKeyup, determineActiveUsers, freshTextArea, getSelectionPos, glow, glowId, imHere, intervalId, listen, live, loginFormEventHandler, model, socket, textAreaActive, textAreaEventHandler, url, utility, view;
+  var alreadyOn, broadcastEnter, broadcastKeyup, chartData, determineActiveUsers, freshTextArea, getSelectionPos, glow, glowId, imHere, intervalId, listen, live, loginFormEventHandler, model, socket, textAreaActive, textAreaEventHandler, url, utility, view;
 
   utility = require('./utility');
 
@@ -559,12 +559,109 @@ require.define("/controller.coffee", function (require, module, exports, __dirna
     return $('#broadcast-text-area').bind('keyup click', textAreaEventHandler);
   };
 
+  chartData = {
+    e: {
+      words: [],
+      count: 0
+    },
+    i: {
+      words: [],
+      count: 0
+    },
+    d: {
+      words: [],
+      count: 0
+    },
+    s: {
+      words: [],
+      count: 0
+    },
+    a: {
+      words: [],
+      count: 0
+    },
+    p: {
+      words: [],
+      count: 0
+    },
+    u: {
+      words: [],
+      count: 0
+    }
+  };
+
   listen = function() {
     socket.on('server-test', function(data) {
       return console.log('server-test: ' + data);
     });
     socket.on('emoo', function(data) {
-      return console.log(['emoo: ' + data]);
+      var pollData, word, _i, _len, _ref;
+      pollData = JSON.parse(data);
+      console.log(['emoo: ', pollData]);
+      chartData = {
+        e: {
+          words: [],
+          count: 0
+        },
+        i: {
+          words: [],
+          count: 0
+        },
+        d: {
+          words: [],
+          count: 0
+        },
+        s: {
+          words: [],
+          count: 0
+        },
+        a: {
+          words: [],
+          count: 0
+        },
+        p: {
+          words: [],
+          count: 0
+        },
+        u: {
+          words: [],
+          count: 0
+        }
+      };
+      _ref = pollData.words;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        word = _ref[_i];
+        switch (word.type) {
+          case 'E':
+            chartData.e.count += 1;
+            chartData.e.words.push(word.word);
+            break;
+          case 'I':
+            chartData.i.count += 1;
+            chartData.i.words.push(word.word);
+            break;
+          case 'D':
+            chartData.d.count += 1;
+            chartData.d.words.push(word.word);
+            break;
+          case 'S':
+            chartData.s.count += 1;
+            chartData.s.words.push(word.word);
+            break;
+          case 'A':
+            chartData.a.count += 1;
+            chartData.a.words.push(word.word);
+            break;
+          case 'P':
+            chartData.p.count += 1;
+            chartData.p.words.push(word.word);
+            break;
+          case 'U':
+            chartData.u.count += 1;
+            chartData.u.words.push(word.word);
+        }
+      }
+      return console.log(['chartData', chartData]);
     });
     socket.on('needs-login', function(nothing) {
       console.log('needs-login');
