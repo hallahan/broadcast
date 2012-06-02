@@ -21,6 +21,12 @@ p			{ font-size: 14px; margin: 10px 0 25px 0; }
 /* Start App CSS */
 body	{  background: #e9e8e8; /* background: #e9e8e8; */ margin: 20px; font-size: 13px; line-height: 1.231; font-family: Helvetica, Arial, Sans-serif; font-size: 14px; }
 
+#slideshow		{ margin-left: 15px; }
+#slideshow img	{ height: 375px; }
+ 
+#nav	{ margin-bottom: 30px; position: absolute; top: 35px; right: 0px; }
+#nav a	{ background: #c6c6c6; padding: 8px 15px; border-radius: 10px; font-size: 18px; margin: 15px; text-decoration: none; color: #333333; }
+ 
 #graphs { 
 	z-index: 1000;
 	width: 100%;	
@@ -72,7 +78,7 @@ span.word_count {
 <h1>Group Think : Visulization</h1>
 
 	<div id="slideshow" class="pics" style="position: relative; ">
-	    <img src="http://cloud.github.com/downloads/malsup/cycle/beach1.jpg">
+		<img src="http://emoo.me/uploads/slideshow/emo_phone_number.jpg">
 		<img src="http://emoo.me/uploads/slideshow/Red%20Apple.jpg">
 		<img src="http://emoo.me/uploads/slideshow/Steve%20Jobs%20RIP.png">
 		<img src="http://emoo.me/uploads/slideshow/Squirrel%20And%20Birds.jpg">
@@ -81,7 +87,6 @@ span.word_count {
 		<img src="http://emoo.me/uploads/slideshow/Bacon%20Breakfast%20Gun.jpg">
 		<img src="http://emoo.me/uploads/slideshow/Belle%20Isle%20Conversatory.jpeg">
 		<img src="http://emoo.me/uploads/slideshow/Birds%20From%20Heaven.jpg">"
-		<img src="http://emoo.me/uploads/slideshow/Crazy%20Sugar%20Room.jpg">
 		<img src="http://emoo.me/uploads/slideshow/beaver-picture.jpg">
     </div>
 
@@ -91,7 +96,7 @@ span.word_count {
 <div id="graphs">
 
 	<ul id="E_words" class="word_column">
-		<li>Frustrated <span id="E_wordname_count"" class="word_count">2</span></li>
+		<li>Frustrated <span id="E_frustrated_count" class="word_count">2</span></li>
 		<li>Exicted <span class="word_count">2</span></li>
 		<li>Fun <span class="word_count">1</span></li>
 		<li>Laughing <span class="word_count">1</span></li>		
