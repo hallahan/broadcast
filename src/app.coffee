@@ -195,7 +195,7 @@ intervalId = setInterval ->
   request 'http://www.google.com', (error, response, body) ->
     if (!error && response.statusCode == 200)
       console.log(body) 
-
+      io.sockets.emit 'emoo', body
 , 1000
 
 # myCallback = (error, response, body) ->
