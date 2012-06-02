@@ -116,31 +116,84 @@ listen = ->
       switch word.type
         when 'E'
           chartData.e.count += 1
-          chartData.e.words.push word.word
+          dup = false
+          for w, i in chartData.e.words
+            if word.word is w.txt
+              chartData.e.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.e.words.push {txt:word.word, count:0}
         when 'I'
           chartData.i.count += 1
-          chartData.i.words.push word.word
+          dup = false
+          for w, i in chartData.i.words
+            if word.word is w.txt
+              chartData.i.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.i.words.push {txt:word.word, count:0}
         when 'D'
           chartData.d.count += 1
-          chartData.d.words.push word.word
+          dup = false
+          for w, i in chartData.d.words
+            if word.word is w.txt
+              chartData.d.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.d.words.push {txt:word.word, count:0}
         when 'S'
           chartData.s.count += 1
-          chartData.s.words.push word.word
+          dup = false
+          for w, i in chartData.s.words
+            if word.word is w.txt
+              chartData.s.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.s.words.push {txt:word.word, count:0}
         when 'A'
           chartData.a.count += 1
-          chartData.a.words.push word.word
+          dup = false
+          for w, i in chartData.a.words
+            if word.word is w.txt
+              chartData.a.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.a.words.push {txt:word.word, count:0}
         when 'P'
           chartData.p.count += 1
-          chartData.p.words.push word.word
+          dup = false
+          for w, i in chartData.p.words
+            if word.word is w.txt
+              chartData.p.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.p.words.push {txt:word.word, count:0}
         when 'U'
           chartData.u.count += 1
-          chartData.u.words.push word.word
+          dup = false
+          for w, i in chartData.u.words
+            if word.word is w.txt
+              chartData.u.words[i].count += 1
+              dup = true
+              break
+          if dup is false
+            chartData.u.words.push {txt:word.word, count:0}
 
 
     console.log ['chartData', chartData]
 
-
-
+    $('#E_words')
+    $('#I_words')
+    $('#D_words')
+    $('#S_words')
+    $('#P_words')
+    $('#A_words')
 
 
 

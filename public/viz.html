@@ -1,0 +1,155 @@
+<!DOCTYPE html>  
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>untitled</title>
+
+<style type="text/css">
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed,  figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; } article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; } body { line-height: 1; }
+ol, ul { list-style: none; } blockquote, q { quotes: none; } blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; } table { border-collapse: collapse; border-spacing: 0; }
+
+/* EMOOME CUSTOM STYLES */
+@font-face { font-family: 'Raleway'; src: url('http://emoo.me/application/modules/emoome/assets/raleway_thin-webfont.eot'); src: url('/application/modules/emoome/assets/raleway_thin-webfont.eot?#iefix') format('embedded-opentype'), url('/application/modules/emoome/assets/raleway_thin-webfont.woff') format('woff'), url('/application/modules/emoome/assets/raleway_thin-webfont.ttf') format('truetype'), url('/application/modules/emoome/assets/raleway_thin-webfont.svg#Helvetica Neue') format('svg'); }
+
+h1, h2, h3	{ font-family: 'Raleway', 'Helvetica Neue', Helvetica, Arial, Sans-Serif; font-weight: 100; margin: 0px 0px 15px 0px; padding: 0px; }
+h1			{ font-size: 48px; line-height: 60px; }
+h2			{ font-size: 36px; line-height: 48px; }
+h3			{ font-size: 30px; line-height: 36px; }
+p			{ font-size: 14px; margin: 10px 0 25px 0; }
+
+/* Start App CSS */
+body	{  background: #e9e8e8; /* background: #e9e8e8; */ margin: 20px; font-size: 13px; line-height: 1.231; font-family: Helvetica, Arial, Sans-serif; font-size: 14px; }
+
+#graphs { 
+	z-index: 1000;
+	width: 100%;	
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	margin: 0 15px 30px 15px;	
+}
+
+ul.word_column {
+	bottom: 0px;
+	width: 145px; 
+	border-radius: 25px;
+	float: left;
+	padding: 10px 25px;
+	margin: 0 15px;
+}
+
+ul.word_column li {
+	font-size: 24px;
+	line-height: 24px;
+	margin: 15px 0px;
+	color: #e9e8e8;;
+	font-family: Helvetica, Arial, Sans-Serif; 
+	font-weight: normal;
+	text-shadow: 1px 1px 1px #333333;
+	text-transform: capitalize;
+}
+
+span.word_count {
+	float: right;
+	color: #c3c3c3;
+	font-style: italic;
+	
+}
+
+#E_words { background-color: #ff0000; }
+#I_words { background-color: #142bd7; }
+#D_words { background-color: #dcca07; }
+#S_words { background-color: #0aa80e; }
+#P_words { background-color: #cf00ee; }
+#A_words { background-color: #ee9700; }
+
+
+</style>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type="text/javascript" src="http://malsup.github.com/chili-1.7.pack.js"></script>
+<script type="text/javascript" src="http://malsup.github.com/jquery.cycle.all.js"></script>
+<script type="text/javascript" src="http://malsup.github.com/jquery.easing.1.3.js"></script>
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function()
+{
+
+	$('#s4') 
+	.before('<div id="nav">') 
+	.cycle({ 
+	    fx:     'turnDown', 
+	    speed:  'fast', 
+	    timeout: 0, 
+	    pager:  '#nav' 
+	});
+
+
+});
+//]]>
+</script>
+</head>
+<body>
+<h1>Group Think : Visulization</h1>
+
+	<div id="s4" class="pics" style="position: relative; ">
+	    <img src="http://cloud.github.com/downloads/malsup/cycle/beach1.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Red%20Apple.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Steve%20Jobs%20RIP.png">
+		<img src="http://emoo.me/uploads/slideshow/Squirrel%20And%20Birds.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Flying%20Dog%20Bite%20Lady%20Face.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Bear%20Hunting%20Kill.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Bacon%20Breakfast%20Gun.jpg">
+		<img src="http://emoo.me/uploads/slideshow/Belle%20Isle%20Conversatory.jpeg">
+		<img src="http://emoo.me/uploads/slideshow/Birds%20From%20Heaven.jpg">"
+		<img src="http://emoo.me/uploads/slideshow/Crazy%20Sugar%20Room.jpg">
+		<img src="http://emoo.me/uploads/slideshow/beaver-picture.jpg">
+    </div>
+
+    <div id="nav"></div>
+
+
+<div id="graphs">
+
+	<ul id="E_words" class="word_column">
+		<li>Frustrated <span class="word_count">2</span></li>
+		<li>Exicted <span class="word_count">2</span></li>
+		<li>Fun <span class="word_count">1</span></li>
+		<li>Laughing <span class="word_count">1</span></li>		
+	</ul>
+	<ul id="I_words" class="word_column">
+		<li>Smart <span class="word_count">3</span></li>
+		<li>Interesting <span class="word_count">2</span></li>				
+	</ul>
+	<ul id="D_words" class="word_column">
+		<li>Neat <span class="word_count">1</span></li>						
+	</ul>
+	<ul id="S_words" class="word_column">
+		<li>Bright <span class="word_count">1</span></li>
+		<li>Bitter <span class="word_count">1</span></li>		
+	</ul>
+	<ul id="P_words" class="word_column">
+		<li>Exhausted <span class="word_count">1</span></li>
+	</ul>
+	<ul id="A_words" class="word_column">
+		<li>Creative <span class="word_count">1</span></li>
+	</ul>
+
+
+</div>
+
+
+
+
+<script src="lib/jquery-1.7.2.min.js"></script>
+    <script src="lib/jquery-ui-1.8.20.custom.min.js"></script>
+    
+    <!-- the real deal -->
+    <script src="broadcast.js"></script>
+
+
+    
+</body>
+</html>
