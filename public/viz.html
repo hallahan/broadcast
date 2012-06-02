@@ -21,19 +21,22 @@ p			{ font-size: 14px; margin: 10px 0 25px 0; }
 /* Start App CSS */
 body	{  background: #e9e8e8; /* background: #e9e8e8; */ margin: 20px; font-size: 13px; line-height: 1.231; font-family: Helvetica, Arial, Sans-serif; font-size: 14px; }
 
-#slideshow		{ margin-left: 15px; }
+#header		{ height: 75px; }
+#header	h1	{ float: left; } 
+ 
+#nav	{ margin-bottom: 30px; float: right; margin-top: 15px; }
+#nav a	{ background: #c6c6c6; padding: 8px 15px; border-radius: 10px; font-size: 18px; margin: 15px; text-decoration: none; color: #333333; }
+
+#slideshow		{ position: relative; top: 0px; left: 0px; margin-left: 15px; }
 #slideshow img	{ height: 375px; }
  
-#nav	{ margin-bottom: 30px; position: absolute; top: 35px; right: 0px; }
-#nav a	{ background: #c6c6c6; padding: 8px 15px; border-radius: 10px; font-size: 18px; margin: 15px; text-decoration: none; color: #333333; }
- 
 #graphs { 
+	position: relative;
+	top: 400px;
 	z-index: 1000;
 	width: 100%;	
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	margin: 0 15px 30px 15px;	
+	margin: 0 15px 30px 15px;
+	
 }
 
 ul.word_column {
@@ -63,6 +66,8 @@ span.word_count {
 	
 }
 
+.clear { clear: both; }
+
 #E_words { background-color: #ff0000; }
 #I_words { background-color: #142bd7; }
 #D_words { background-color: #dcca07; }
@@ -75,41 +80,35 @@ span.word_count {
 
 </head>
 <body>
-<h1>Group Think : Visulization</h1>
+<header>
+	<div id="header">
+		<h1>Group Think</h1>
+	    <div id="nav"></div>
+	    <div class="clear"></div>
+	</div>
+</header>
 
-	<div id="slideshow" class="pics" style="position: relative; ">
-		<img src="http://emoo.me/uploads/slideshow/emo_phone_number.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Red%20Apple.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Steve%20Jobs%20RIP.png">
-		<img src="http://emoo.me/uploads/slideshow/Squirrel%20And%20Birds.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Flying%20Dog%20Bite%20Lady%20Face.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Bear%20Hunting%20Kill.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Bacon%20Breakfast%20Gun.jpg">
-		<img src="http://emoo.me/uploads/slideshow/Belle%20Isle%20Conversatory.jpeg">
-		<img src="http://emoo.me/uploads/slideshow/Birds%20From%20Heaven.jpg">"
-		<img src="http://emoo.me/uploads/slideshow/beaver-picture.jpg">
-    </div>
-
-    <div id="nav"></div>
-
-
-<div id="graphs">
-
-	<ul id="E_words" class="word_column">	
-	</ul>
-	<ul id="I_words" class="word_column">			
-	</ul>
-	<ul id="D_words" class="word_column">
-	</ul>
-	<ul id="S_words" class="word_column">		
-	</ul>
-	<ul id="P_words" class="word_column">
-	</ul>
-	<ul id="A_words" class="word_column">
-	</ul>
-
+<div id="slideshow" class="pics" style="position: relative; ">
+	<img src="http://emoo.me/uploads/slideshow/emo_phone_number.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Red%20Apple.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Steve%20Jobs%20RIP.png">
+	<img src="http://emoo.me/uploads/slideshow/Squirrel%20And%20Birds.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Flying%20Dog%20Bite%20Lady%20Face.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Bear%20Hunting%20Kill.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Bacon%20Breakfast%20Gun.jpg">
+	<img src="http://emoo.me/uploads/slideshow/Belle%20Isle%20Conversatory.jpeg">
+	<img src="http://emoo.me/uploads/slideshow/Birds%20From%20Heaven.jpg">"
+	<img src="http://emoo.me/uploads/slideshow/beaver-picture.jpg">
 </div>
 
+<div id="graphs">
+	<ul id="E_words" class="word_column"></ul>
+	<ul id="I_words" class="word_column"></ul>
+	<ul id="D_words" class="word_column"></ul>
+	<ul id="S_words" class="word_column"></ul>
+	<ul id="P_words" class="word_column"></ul>
+	<ul id="A_words" class="word_column"></ul>
+</div>
 
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
