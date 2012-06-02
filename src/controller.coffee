@@ -2,32 +2,43 @@
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
-# This is the code for the controller which resides
+# This is the code for the controller which executes
 # client side.
 
 
-util    = broadcast.util
-view    = broadcast.view
-socket  = broadcast.socket
-url     = broadcast.url
+utility = require './utility'
+view    = require './view'
+url     = 'http://localhost:1986'
+socket  = {}
 
-# pack with data structures for the controller to use
-broadcast.model = model = {}
+# Pack with data structures for the controller to use.
+# This is not synchronized with the model on the server.
+# it is just a data structure for use by the individual
+# client.
+model = {}
+
 textAreaActive = false
 
 
-#Get initial data from server.
-$.getJSON "#{url}/data", (data) ->
+# No callback is needed, because everything else will load
+# fine if this library isn't here yet.
+$.getScript "#{url}/lib/bootstrap/js/bootstrap-collapse.js"
 
-  # Make data availible in the client model.
-  model = data
+# Get Socket.io libraries, jQuery puts that in the global namespace.
+$.getScript "#{url}/socket.io/socket.io.js", () ->
 
-  # Populate views with data
-  view.online(determineActiveUsers())
-  view.broadcasts(data.log, data.users)
+  #Get initial data from server.
+  $.getJSON "#{url}/data", (data) ->
 
-  # Allow real-time activity via socket.io
-  live()
+    # Make data availible in the client model.
+    model = data
+
+    # Populate views with data
+    view.online(determineActiveUsers())
+    view.broadcasts(data.log, data.users)
+
+    # Allow real-time activity via socket.io
+    live()
 
 
 # socket.io functionality
@@ -35,8 +46,8 @@ $.getJSON "#{url}/data", (data) ->
 # gotten our initial data from the data http response.
 live = ->
   # Good to give this to broadcast so we can talk in console.
-  broadcast.socket = socket = io.connect(url)
-  socket.emit 'client-test', "hi: #{util.timeStr util.now()}"
+  socket = io.connect(url)
+  socket.emit 'client-test', "hi: #{utility.timeStr utility.now()}"
   if model?.iam? then imHere(true)
   listen()
 
@@ -223,7 +234,7 @@ glow = (broadcast) ->
 
   # apply to view
   html = """#{beforeText}<span class="glow" id="g#{glowId}">#{glowText}</span>#{afterText}"""
-  $('#btime'+broadcast.uid).html util.timeStr(broadcast.time) # time element
+  $('#btime'+broadcast.uid).html utility.timeStr(broadcast.time) # time element
   $('#btext'+broadcast.uid).html html # glowing text
 
   # animate

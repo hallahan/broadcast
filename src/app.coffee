@@ -15,7 +15,7 @@ PUBLIC = __dirname + '/../public'
 express     = require 'express'
 sio         = require 'socket.io'
 model       = require './model'
-util        = require './util'
+utility        = require './utility'
 
 # Session Memory Store
 sessionStore = new express.session.MemoryStore()
@@ -138,7 +138,7 @@ io.sockets.on 'connection', (socket) ->
   # says hello
   socket.on 'client-test', (data) ->
     console.log data
-    socket.emit 'server-test', 'hi ' + util.timeStr(util.now())
+    socket.emit 'server-test', 'hi ' + utility.nowStr()
 
 
   socket.on 'here', (uid) ->
@@ -154,11 +154,6 @@ auth = (req, res, next) ->
   else
     res.redirect('/')
 
-
-app.get '/hello', (req, res) ->
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With")
-  res.send util
 
 # Routes
 app.get '/', (req, res) ->

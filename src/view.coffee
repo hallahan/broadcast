@@ -2,7 +2,7 @@
 # by Nicholas Hallahan
 # http://broadcast.theoutpost.io
 
-util = broadcast.util
+utility = require './utility'
 str = ''
 onlineCount = 0
 
@@ -16,8 +16,8 @@ online = (users) ->
                 <div id="broadcast-users" class="accordion-body collapse in">""" 
   for user in users
     str +=  """   <div data-uid=#{user.uid} class="accordion-inner">
-                    <strong>#{user.name||util.emptyStr}</strong>
-                    <span class="broadcast-email">#{user.email||util.emptyStr}</span>
+                    <strong>#{user.name||utility.emptyStr}</strong>
+                    <span class="broadcast-email">#{user.email||utility.emptyStr}</span>
                   </div>"""
   str +=    """ </div>"""
 
@@ -26,8 +26,8 @@ online = (users) ->
 
 userOnline = (user) ->
   str =     """   <div data-uid=#{user.uid} class="accordion-inner">
-                    <strong>#{user.name||util.emptyStr}</strong>
-                    <span class="broadcast-email">#{user.email||util.emptyStr}</span>
+                    <strong>#{user.name||utility.emptyStr}</strong>
+                    <span class="broadcast-email">#{user.email||utility.emptyStr}</span>
                   </div>"""
 
   $('#broadcast-users').prepend str
@@ -53,7 +53,7 @@ broadcasts = (log, users) ->
   str =      """<div class="accordion-group">
                   <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#broadcasts" href="#broadcast-today">
-                      <strong>#{util.todayStr()}</strong>
+                      <strong>#{utility.todayStr()}</strong>
                     </a>
                   </div>
                   <div id="broadcast-today" class="accordion-body collapse in">
@@ -63,10 +63,10 @@ broadcasts = (log, users) ->
                     </div>
                     <div id="input-inactive"></div>"""
   while l = log?.pop()
-    if util.isToday l.time
+    if utility.isToday l.time
       str += """    <div class="accordion-inner">
                       <strong>#{users[l.uid].name||users[l.uid].email}</strong>
-                      <span class="broadcast-time">#{util.timeStr(l.time)}</span>
+                      <span class="broadcast-time">#{utility.timeStr(l.time)}</span>
                       <br/>
                       #{l.text}
                     </div>"""
@@ -85,21 +85,21 @@ broadcastsPast = (log, l, users) ->
   str +=     """<div class="accordion-group">
                   <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#broadcasts" href="##{l.time}">
-                      <strong>#{util.dateStr l.time}</strong>
+                      <strong>#{utility.dateStr l.time}</strong>
                     </a>
                   </div>
                   <div id="#{l.time}" class="accordion-body collapse">
                     <div class="accordion-inner">
                       <strong>#{users[l.uid].name||users[l.uid].email}</strong>
-                      <span class="broadcast-time">#{util.timeStr(l.time)}</span>
+                      <span class="broadcast-time">#{utility.timeStr(l.time)}</span>
                       <br/>
                       #{l.text}
                     </div>"""
   while next = log?.pop()
-    if util.isSameDate l.time, next.time
+    if utility.isSameDate l.time, next.time
       str += """    <div class="accordion-inner">
                       <strong>#{users[next.uid].name||users[next.uid].email}</strong>
-                      <span class="broadcast-time">#{util.timeStr(next.time)}</span>
+                      <span class="broadcast-time">#{utility.timeStr(next.time)}</span>
                       <br/>
                       #{next.text}
                     </div>"""
@@ -159,7 +159,7 @@ textArea = () ->
 createBroadcast = (prependDiv, user, broadcast) ->
   str = """ <div id="b#{broadcast.uid}" class="accordion-inner">
               <strong>#{user.name||user.email}</strong>
-              <span id="btime#{broadcast.uid}"class="broadcast-time">#{util.timeStr(broadcast.time)}</span>
+              <span id="btime#{broadcast.uid}"class="broadcast-time">#{utility.timeStr(broadcast.time)}</span>
               <br/>
               <span id="btext#{broadcast.uid}"class="broadcast-text glow">#{broadcast.text}</span>
             </div>"""
@@ -167,13 +167,4 @@ createBroadcast = (prependDiv, user, broadcast) ->
   $('#btext'+broadcast.uid).removeClass 'glow', 1000 # 1 second
 
 
-broadcast.view = 
-  online            : online
-  userOnline        : userOnline
-  userOffline       : userOffline
-  broadcasts        : broadcasts
-  login             : login
-  loginFailed       : loginFailed
-  textArea          : textArea
-  createBroadcast   : createBroadcast
-  newInput          : newInput
+module.exports = {online,userOnline,userOffline,broadcasts,login,loginFailed,textArea,createBroadcast,newInput}

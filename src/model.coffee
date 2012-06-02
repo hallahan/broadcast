@@ -16,7 +16,7 @@ LAST_LOG_PATH = PROJ_DIR + '/data/last-log.json' # determines which saved log is
 
 
 # Requirements
-util  = require('./util')
+utility  = require('./utility')
 # test  = require('../test/test-model')
 fs    = require('fs') #file system
 
@@ -63,7 +63,7 @@ class User
   # RETURNS the time of the activity, i.e. now.
   activity: (ip) ->
     @ip = ip
-    t = util.now()
+    t = utility.now()
     @lastActivity = t
     if @active == false
       @active = true
@@ -78,7 +78,7 @@ class User
   logout: (ip) ->
     @logouts.push 
       ip: ip
-      time: util.now()
+      time: utility.now()
     @active = false
 
   socketConnect: (ip) ->
@@ -89,7 +89,7 @@ class User
   socketDisconnect: (ip) ->
     @socketDisconnects.push 
       ip: ip
-      time: util.now()
+      time: utility.now()
     @active = false
 
 
@@ -114,7 +114,7 @@ start = (sio) ->
 # PRIVATE
 # Loads into memory the log that is specified in 'last-log.json'.
 load = ->
-  loadTimes.push util.now()
+  loadTimes.push utility.now()
   try
     lastLog = JSON.parse fs.readFileSync LAST_LOG_PATH, "utf8"
     logPath = "#{PROJ_DIR}/data/#{lastLog}.json"
@@ -132,7 +132,7 @@ load = ->
 # of logs previously saved + 1.
 # RETURNS data as a string
 save = ->
-  saveTimes.push util.now()
+  saveTimes.push utility.now()
   data = JSON.stringify { log, users, loadTimes, saveTimes, anon, sidToUid }, null, 2
   fs.writeFile "#{PROJ_DIR}/data/#{saveTimes.length}.json", data, (err) ->
     console.log 'unable to save memory to disk: '+err if err
@@ -190,7 +190,7 @@ socketConnect = (session) ->
     anon.push
       sid: session.id
       ip: session.ip
-      time: util.now()
+      time: utility.now()
       type: 'socketConnect'
     null
 
@@ -208,7 +208,7 @@ socketDisconnect = (session) ->
     anon.push
       sid: session.sid
       ip: session.ip
-      time: util.now()
+      time: utility.now()
       type: 'socketDisconnect'
     null
 
@@ -216,7 +216,7 @@ socketDisconnect = (session) ->
 # Goes through all of the users and checks
 # if they are still active. 
 checkActivity = ->
-  t = util.now()
+  t = utility.now()
   for user in users
     if user.active is true and t - user.lastActivity > 7000 # 7 secs
       io.sockets.emit('inactive', user.uid)
