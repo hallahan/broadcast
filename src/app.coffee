@@ -16,6 +16,8 @@ express     = require 'express'
 sio         = require 'socket.io'
 model       = require './model'
 utility        = require './utility'
+request = require('request')
+
 
 # Session Memory Store
 sessionStore = new express.session.MemoryStore()
@@ -184,6 +186,21 @@ app.listen PORT, ->
   console.log "Broadcast server listening on port %d in %s mode", app.address().port, app.settings.env
 
 
+
+
+
+intervalId = setInterval ->
+  console.log 'timer'
+      
+  request 'http://www.google.com', (error, response, body) ->
+    if (!error && response.statusCode == 200)
+      console.log(body) 
+
+, 1000
+
+# myCallback = (error, response, body) ->
+#   if (!error && response.statusCode == 200)
+#       console.log(body) 
 
 
 

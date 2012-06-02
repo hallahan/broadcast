@@ -63,6 +63,8 @@ listen = ->
   socket.on 'server-test', (data) ->
     console.log 'server-test: ' + data
 
+  socket.on 'emoo', (data) ->
+    console.log ['emoo: ' + data ]
 
   socket.on 'needs-login', (nothing) ->
     console.log 'needs-login'
