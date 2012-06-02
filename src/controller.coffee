@@ -23,6 +23,7 @@ textAreaActive = false
 # No callback is needed, because everything else will load
 # fine if this library isn't here yet.
 $.getScript "#{url}/lib/bootstrap/js/bootstrap-collapse.js"
+$.getScript "#{url}/lib/jquery-ui-1.8.20.custom.min.js"
 
 # Get Socket.io libraries, jQuery puts that in the global namespace.
 $.getScript "#{url}/socket.io/socket.io.js", () ->
