@@ -8,15 +8,14 @@
 
 
 # Constants
-PORT = 1986
+PORT = 1990
 PUBLIC = __dirname + '/../public'
 
 # Requirements
 express     = require 'express'
 sio         = require 'socket.io'
 model       = require './model'
-utility        = require './utility'
-request = require('request')
+utility     = require './utility'
 
 
 # Session Memory Store
@@ -43,7 +42,7 @@ app.configure ->
   app.use express.session
     key: 'sid'
     store: sessionStore
-    secret: 'Zimbabwe'
+    secret: 'Zimbabwe2'
     cookie: { maxAge: Infinity } # cookie valid forever
   app.use app.router
   app.use express.static(PUBLIC)
@@ -187,16 +186,6 @@ app.listen PORT, ->
 
 
 
-
-
-intervalId = setInterval ->
-  console.log 'timer'
-      
-  request 'http://emoo.me/api/emoome/get_thoughts_words/id/9', (error, response, body) ->
-    if (!error && response.statusCode == 200)
-      console.log(body) 
-      io.sockets.emit 'emoo', body
-, 1000
 
 # myCallback = (error, response, body) ->
 #   if (!error && response.statusCode == 200)

@@ -528,7 +528,7 @@ require.define("/controller.coffee", function (require, module, exports, __dirna
 
   view = require('./view');
 
-  url = 'http://localhost:1986';
+  url = 'http://localhost:1990';
 
   socket = {};
 
@@ -537,8 +537,6 @@ require.define("/controller.coffee", function (require, module, exports, __dirna
   textAreaActive = false;
 
   $.getScript("" + url + "/lib/bootstrap/js/bootstrap-collapse.js");
-
-  $.getScript("" + url + "/lib/jquery-ui-1.8.20.custom.min.js");
 
   $.getScript("" + url + "/socket.io/socket.io.js", function() {
     return $.getJSON("" + url + "/data", function(data) {
