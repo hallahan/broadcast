@@ -522,13 +522,11 @@ require.define("/view.coffee", function (require, module, exports, __dirname, __
 
 require.define("/controller.coffee", function (require, module, exports, __dirname, __filename) {
     (function() {
-  var alreadyOn, broadcastEnter, broadcastKeyup, chartData, determineActiveUsers, freshTextArea, getSelectionPos, glow, glowId, imHere, intervalId, listen, live, loginFormEventHandler, model, socket, textAreaActive, textAreaEventHandler, url, utility, view;
+  var alreadyOn, broadcastEnter, broadcastKeyup, chartData, determineActiveUsers, freshTextArea, getSelectionPos, glow, glowId, imHere, intervalId, listen, live, loginFormEventHandler, model, socket, textAreaActive, textAreaEventHandler, utility, view;
 
   utility = require('./utility');
 
   view = require('./view');
-
-  url = 'http://localhost:1990';
 
   socket = {};
 
@@ -536,10 +534,10 @@ require.define("/controller.coffee", function (require, module, exports, __dirna
 
   textAreaActive = false;
 
-  $.getScript("" + url + "/lib/bootstrap/js/bootstrap-collapse.js");
+  $.getScript("/lib/bootstrap/js/bootstrap-collapse.js");
 
-  $.getScript("" + url + "/socket.io/socket.io.js", function() {
-    return $.getJSON("" + url + "/data", function(data) {
+  $.getScript("/socket.io/socket.io.js", function() {
+    return $.getJSON("/data", function(data) {
       model = data;
       view.online(determineActiveUsers());
       view.broadcasts(data.log, data.users);
@@ -548,7 +546,7 @@ require.define("/controller.coffee", function (require, module, exports, __dirna
   });
 
   live = function() {
-    socket = io.connect(url);
+    socket = io.connect();
     socket.emit('client-test', "hi: " + (utility.timeStr(utility.now())));
     if ((model != null ? model.iam : void 0) != null) {
       imHere(true);

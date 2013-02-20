@@ -8,7 +8,6 @@
 
 utility = require './utility'
 view    = require './view'
-url     = 'http://theoutpost.io:1990'
 socket  = {}
 
 # Pack with data structures for the controller to use.
@@ -22,13 +21,13 @@ textAreaActive = false
 
 # No callback is needed, because everything else will load
 # fine if this library isn't here yet.
-$.getScript "#{url}/lib/bootstrap/js/bootstrap-collapse.js"
+$.getScript "/lib/bootstrap/js/bootstrap-collapse.js"
 
 # Get Socket.io libraries, jQuery puts that in the global namespace.
-$.getScript "#{url}/socket.io/socket.io.js", () ->
+$.getScript "/socket.io/socket.io.js", () ->
 
   #Get initial data from server.
-  $.getJSON "#{url}/data", (data) ->
+  $.getJSON "/data", (data) ->
 
     # Make data availible in the client model.
     model = data
@@ -46,7 +45,7 @@ $.getScript "#{url}/socket.io/socket.io.js", () ->
 # gotten our initial data from the data http response.
 live = ->
   # Good to give this to broadcast so we can talk in console.
-  socket = io.connect(url)
+  socket = io.connect()
   socket.emit 'client-test', "hi: #{utility.timeStr utility.now()}"
   if model?.iam? then imHere(true)
   listen()
