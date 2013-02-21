@@ -55,35 +55,12 @@ live = ->
   $('#broadcast-text-area').bind 'keyup click', textAreaEventHandler
 
 
-chartData = 
-  e: 
-    words : []
-    count : 0
-  i: 
-    words : []
-    count : 0
-  d: 
-    words : []
-    count : 0
-  s: 
-    words : []
-    count : 0
-  a: 
-    words : []
-    count : 0
-  p: 
-    words : []
-    count : 0
-  u: 
-    words : []
-    count : 0
-
 # Recieve all of the events broadcast from server
 listen = ->
 
   socket.on 'server-test', (data) ->
     console.log 'server-test: ' + data
-    
+
 
   socket.on 'needs-login', (nothing) ->
     console.log 'needs-login'
